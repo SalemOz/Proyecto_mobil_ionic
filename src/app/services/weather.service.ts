@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
 import { Geolocation } from '@capacitor/geolocation';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, timeout } from 'rxjs';
 import { AmbientMode, Weather } from '../models';
 
 const API_URL = 'https://api.open-meteo.com/v1/forecast';
@@ -52,7 +52,8 @@ export function suggestMode(weather: Weather): ModeSuggestion | null {
   if (weather.code >= 95) return { mode: 'high', reason: 'Hay tormenta: el ruido tapa los sonidos del entorno.' };
   if (rainy) return { mode: 'high', reason: 'Está lloviendo: la lluvia tapa los sonidos del entorno.' };
   if (weather.wind >= 25) return { mode: 'high', reason: 'Hay viento fuerte: puede tapar los sonidos del entorno.' };
-  if (weather.code === 0 || weather.code <= 2) return { mode: 'low', reason: 'Clima tranquilo: el modo Bajo es suficiente.' };
+  if (weather.code <= 2)
+    return { mode: 'low', reason: 'Clima tranquilo: el modo Bajo es suficiente.' };
   return null;
 }
 
@@ -63,14 +64,18 @@ export class WeatherService {
 
   async load(): Promise<WeatherResult> {
     const place = await this.locate();
+    // Si el servidor no responde en 10 s, la petición falla y la página muestra su estado de error
+    // en vez de quedarse «Cargando clima…» para siempre.
     const response = await firstValueFrom(
-      this.http.get<OpenMeteoResponse>(API_URL, {
-        params: {
-          latitude: place.lat,
-          longitude: place.lon,
-          current: 'temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m'
-        }
-      })
+      this.http
+        .get<OpenMeteoResponse>(API_URL, {
+          params: {
+            latitude: place.lat,
+            longitude: place.lon,
+            current: 'temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m'
+          }
+        })
+        .pipe(timeout(10000))
     );
     const c = response.current;
     return {

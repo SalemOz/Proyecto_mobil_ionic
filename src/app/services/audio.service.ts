@@ -173,13 +173,19 @@ export class AudioService {
     const samples = new Uint8Array(analyser.fftSize);
     this.zone.runOutsideAngular(() => {
       this.meterTimer = window.setInterval(() => {
+        // Con la app en segundo plano no hay nada que dibujar: se evita el cálculo y el redibujado.
+        if (document.hidden) return;
         analyser.getByteTimeDomainData(samples);
         let sum = 0;
         for (const value of samples) {
           const x = (value - 128) / 128;
           sum += x * x;
         }
-        this.level.set(Math.min(1, Math.sqrt(sum / samples.length) * 4));
+        // Se redondea a 2 decimales y se avisa solo con cambios de 0.02 o más: el medidor se ve
+        // igual, pero la vista se redibuja muchas menos veces por segundo.
+        const next = Math.round(Math.min(1, Math.sqrt(sum / samples.length) * 4) * 100) / 100;
+        if (Math.abs(next - this.level()) < 0.02) return;
+        this.level.set(next);
       }, 100);
     });
   }

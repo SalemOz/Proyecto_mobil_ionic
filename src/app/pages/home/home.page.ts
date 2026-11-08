@@ -1,8 +1,8 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import {
   IonButton, IonCard, IonCardContent, IonChip, IonContent, IonIcon, IonLabel,
-  IonRange, IonSegment, IonSegmentButton, IonSpinner, ToastController
+  IonRange, IonSegment, IonSegmentButton, IonSpinner
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
@@ -13,6 +13,7 @@ import {
 import { AmbientMode, EAR_LABEL, MODE_LABEL } from '../../models';
 import { AUDIO_ERROR_TEXT, AudioError, AudioService } from '../../services/audio.service';
 import { StorageService } from '../../services/storage.service';
+import { UiService } from '../../services/ui.service';
 import { WeatherResult, WeatherService, describeWeather, suggestMode } from '../../services/weather.service';
 
 const MODE_HINT: Record<AmbientMode, string> = {
@@ -28,13 +29,15 @@ const MODE_HINT: Record<AmbientMode, string> = {
     IonLabel, IonIcon, IonChip, IonButton, IonSpinner
   ],
   templateUrl: './home.page.html',
-  styleUrl: './home.page.scss'
+  styleUrl: './home.page.scss',
+  // Todo lo que se muestra sale de signals: la vista solo se revisa cuando alguno cambia.
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomePage implements OnInit {
   protected readonly store = inject(StorageService);
   protected readonly audio = inject(AudioService);
   private readonly weatherService = inject(WeatherService);
-  private readonly toastController = inject(ToastController);
+  private readonly ui = inject(UiService);
 
   protected readonly modeLabel = MODE_LABEL;
   protected readonly modes: AmbientMode[] = ['low', 'medium', 'high'];
@@ -91,7 +94,7 @@ export class HomePage implements OnInit {
       }
     } catch (error) {
       const code = error instanceof AudioError ? error.code : 'unknown';
-      await this.showToast(AUDIO_ERROR_TEXT[code]);
+      await this.ui.toast(AUDIO_ERROR_TEXT[code], 3500);
     } finally {
       this.busy.set(false);
     }
@@ -119,8 +122,4 @@ export class HomePage implements OnInit {
     }
   }
 
-  private async showToast(message: string): Promise<void> {
-    const toast = await this.toastController.create({ message, duration: 3500, position: 'top' });
-    await toast.present();
-  }
 }

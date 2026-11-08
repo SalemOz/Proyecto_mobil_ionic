@@ -1,7 +1,7 @@
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 
 // Solo letras (con tildes y ñ), espacios, guiones y apóstrofes; 2 a 50 caracteres.
-const NAME_REGEX = /^\p{L}[\p{L} '\-]{1,49}$/u;
+const NAME_REGEX = /^\p{L}[\p{L} '-]{1,49}$/u;
 const RESERVED_NAMES = ['admin', 'test', 'usuario', 'user', 'root', 'prueba'];
 
 export function nameValidator(control: AbstractControl): ValidationErrors | null {

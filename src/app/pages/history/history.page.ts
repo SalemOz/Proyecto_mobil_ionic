@@ -1,20 +1,23 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
-import { AlertController, IonButton, IonContent, IonIcon, IonItem, IonLabel, IonList } from '@ionic/angular';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { IonButton, IonContent, IonIcon, IonItem, IonLabel, IonList } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { micOutline, timeOutline, trashOutline } from 'ionicons/icons';
 import { EAR_LABEL, MODE_LABEL } from '../../models';
 import { StorageService } from '../../services/storage.service';
+import { UiService } from '../../services/ui.service';
 
 @Component({
   selector: 'app-history',
   imports: [DatePipe, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton],
   templateUrl: './history.page.html',
-  styleUrl: './history.page.scss'
+  styleUrl: './history.page.scss',
+  // La lista y los totales salen de signals: la vista solo se revisa cuando cambian.
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HistoryPage {
   private readonly store = inject(StorageService);
-  private readonly alertController = inject(AlertController);
+  private readonly ui = inject(UiService);
 
   protected readonly sessions = this.store.sessions;
   protected readonly totalSeconds = computed(() => this.sessions().reduce((sum, s) => sum + s.seconds, 0));
@@ -32,15 +35,6 @@ export class HistoryPage {
   }
 
   protected async confirmClear(): Promise<void> {
-    const alert = await this.alertController.create({
-      header: 'Borrar historial',
-      cssClass: 'oido-alert',
-      message: '¿Seguro que quieres borrar todas las sesiones registradas?',
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        { text: 'Borrar', role: 'destructive', handler: () => this.store.clearSessions() }
-      ]
-    });
-    await alert.present();
+    await this.ui.confirmClearHistory();
   }
 }
