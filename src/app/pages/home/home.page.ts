@@ -18,7 +18,7 @@ import {
   IonRange,
   IonSegment,
   IonSegmentButton,
-  IonSpinner,
+  IonSkeletonText,
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
@@ -72,7 +72,7 @@ const MODE_HINT: Record<AmbientMode, string> = {
     IonIcon,
     IonChip,
     IonButton,
-    IonSpinner,
+    IonSkeletonText,
   ],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',
@@ -99,6 +99,10 @@ export class HomePage implements OnInit {
     const hour = new Date().getHours();
     return hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
   });
+
+  /** Los esqueletos no se animan si el sistema pide reducir el movimiento. */
+  protected readonly animateSkeleton = !window.matchMedia?.('(prefers-reduced-motion: reduce)')
+    .matches;
 
   /** true mientras se espera el permiso del micrófono, para evitar toques repetidos. */
   protected readonly busy = signal(false);

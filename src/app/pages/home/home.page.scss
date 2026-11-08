@@ -112,7 +112,7 @@
 }
 .input-label {
   margin-top: 4px;
-  font-size: 0.78rem;
+  font-size: 0.8125rem;
   color: var(--oido-muted);
   opacity: 0.85;
 }
@@ -150,6 +150,10 @@
 }
 .card-head .refresh {
   margin-left: auto;
+  --padding-start: 0;
+  --padding-end: 0;
+  width: 44px;
+  height: 44px;
 }
 ion-range ion-icon {
   color: var(--oido-muted);
@@ -164,11 +168,6 @@ ion-segment {
 
 .weather-card {
   background: linear-gradient(135deg, #e9f7f5 0%, #ffffff 70%);
-}
-.loading {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 .place {
   display: flex;
