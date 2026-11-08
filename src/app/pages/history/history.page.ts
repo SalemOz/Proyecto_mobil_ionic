@@ -13,14 +13,16 @@ import { UiService } from '../../services/ui.service';
   templateUrl: './history.page.html',
   styleUrl: './history.page.scss',
   // La lista y los totales salen de signals: la vista solo se revisa cuando cambian.
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HistoryPage {
   private readonly store = inject(StorageService);
   private readonly ui = inject(UiService);
 
   protected readonly sessions = this.store.sessions;
-  protected readonly totalSeconds = computed(() => this.sessions().reduce((sum, s) => sum + s.seconds, 0));
+  protected readonly totalSeconds = computed(() =>
+    this.sessions().reduce((sum, s) => sum + s.seconds, 0),
+  );
   protected readonly earLabel = EAR_LABEL;
   protected readonly modeLabel = MODE_LABEL;
 

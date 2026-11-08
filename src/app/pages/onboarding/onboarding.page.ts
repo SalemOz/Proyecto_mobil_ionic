@@ -3,7 +3,13 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { IonButton, IonContent, IonIcon, IonInput } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { arrowForward, checkmarkCircle, earOutline, lockClosedOutline, personCircleOutline } from 'ionicons/icons';
+import {
+  arrowForward,
+  checkmarkCircle,
+  earOutline,
+  lockClosedOutline,
+  personCircleOutline,
+} from 'ionicons/icons';
 import { Ear } from '../../models';
 import { StorageService } from '../../services/storage.service';
 import { nameErrorMessage, nameValidator } from '../../validators';
@@ -12,7 +18,7 @@ import { nameErrorMessage, nameValidator } from '../../validators';
   selector: 'app-onboarding',
   imports: [ReactiveFormsModule, IonContent, IonInput, IonButton, IonIcon],
   templateUrl: './onboarding.page.html',
-  styleUrl: './onboarding.page.scss'
+  styleUrl: './onboarding.page.scss',
 })
 export class OnboardingPage {
   private readonly fb = inject(NonNullableFormBuilder);
@@ -21,12 +27,12 @@ export class OnboardingPage {
 
   protected readonly ears: { value: Ear; label: string }[] = [
     { value: 'left', label: 'Izquierdo' },
-    { value: 'right', label: 'Derecho' }
+    { value: 'right', label: 'Derecho' },
   ];
 
   protected readonly form = this.fb.group({
     name: ['', [Validators.required, nameValidator]],
-    ear: ['right' as Ear, Validators.required]
+    ear: ['right' as Ear, Validators.required],
   });
 
   constructor() {

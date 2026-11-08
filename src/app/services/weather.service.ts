@@ -48,10 +48,14 @@ export function describeWeather(code: number): { text: string; icon: string } {
  * se sugiere el modo "Alto" para no perder lo que pasa del lado afectado.
  */
 export function suggestMode(weather: Weather): ModeSuggestion | null {
-  const rainy = (weather.code >= 51 && weather.code <= 67) || (weather.code >= 80 && weather.code <= 82);
-  if (weather.code >= 95) return { mode: 'high', reason: 'Hay tormenta: el ruido tapa los sonidos del entorno.' };
-  if (rainy) return { mode: 'high', reason: 'Está lloviendo: la lluvia tapa los sonidos del entorno.' };
-  if (weather.wind >= 25) return { mode: 'high', reason: 'Hay viento fuerte: puede tapar los sonidos del entorno.' };
+  const rainy =
+    (weather.code >= 51 && weather.code <= 67) || (weather.code >= 80 && weather.code <= 82);
+  if (weather.code >= 95)
+    return { mode: 'high', reason: 'Hay tormenta: el ruido tapa los sonidos del entorno.' };
+  if (rainy)
+    return { mode: 'high', reason: 'Está lloviendo: la lluvia tapa los sonidos del entorno.' };
+  if (weather.wind >= 25)
+    return { mode: 'high', reason: 'Hay viento fuerte: puede tapar los sonidos del entorno.' };
   if (weather.code <= 2)
     return { mode: 'low', reason: 'Clima tranquilo: el modo Bajo es suficiente.' };
   return null;
@@ -72,10 +76,10 @@ export class WeatherService {
           params: {
             latitude: place.lat,
             longitude: place.lon,
-            current: 'temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m'
-          }
+            current: 'temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m',
+          },
         })
-        .pipe(timeout(10000))
+        .pipe(timeout(10000)),
     );
     const c = response.current;
     return {
@@ -84,8 +88,8 @@ export class WeatherService {
         temperature: c.temperature_2m,
         humidity: c.relative_humidity_2m,
         wind: c.wind_speed_10m,
-        code: c.weather_code
-      }
+        code: c.weather_code,
+      },
     };
   }
 
@@ -101,7 +105,7 @@ export class WeatherService {
       const position = await Geolocation.getCurrentPosition({
         enableHighAccuracy: false,
         timeout: 8000,
-        maximumAge: 600000
+        maximumAge: 600000,
       });
       return { lat: position.coords.latitude, lon: position.coords.longitude, fromGps: true };
     } catch {

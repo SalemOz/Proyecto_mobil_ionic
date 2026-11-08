@@ -6,6 +6,6 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular';
   imports: [IonApp, IonRouterOutlet],
   template: `<ion-app><ion-router-outlet></ion-router-outlet></ion-app>`,
   // El cascarón no tiene estado: las vistas de dentro se encargan de su propio cambio.
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {}

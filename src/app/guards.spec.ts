@@ -18,9 +18,9 @@ function setup(hasProfile: boolean): void {
       { provide: Router, useValue: routerStub },
       {
         provide: StorageService,
-        useValue: { profile: signal(hasProfile ? { name: 'Delia', ear: 'left' } : null) }
-      }
-    ]
+        useValue: { profile: signal(hasProfile ? { name: 'Delia', ear: 'left' } : null) },
+      },
+    ],
   });
 }
 

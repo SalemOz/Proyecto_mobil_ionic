@@ -38,7 +38,11 @@
             @if (form.controls.ear.value === ear.value) {
               <ion-icon name="checkmark-circle" class="check"></ion-icon>
             }
-            <ion-icon name="ear-outline" class="ear-icon" [class.flip]="ear.value === 'left'"></ion-icon>
+            <ion-icon
+              name="ear-outline"
+              class="ear-icon"
+              [class.flip]="ear.value === 'left'"
+            ></ion-icon>
             <span>{{ ear.label }}</span>
           </button>
         }
