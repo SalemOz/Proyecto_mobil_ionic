@@ -1,0 +1,43 @@
+/*
+  Centrado vertical: el contenedor interno de ion-content (parte "scroll") pasa a ser una columna flex
+  y .wrap usa margen automático arriba y abajo. Si el contenido no cabe, simplemente se desplaza.
+*/
+ion-content::part(scroll) { display: flex; flex-direction: column; }
+.wrap { width: 100%; max-width: 480px; margin: auto; padding: 16px 0; }
+
+h1, .intro, .brand { text-align: center; }
+.brand { color: var(--ion-color-primary); font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; font-size: 0.8rem; margin-bottom: 6px; }
+.intro { margin: 6px 0 28px; }
+
+/* Ilustración: oído dentro de un círculo con ondas suaves */
+.art {
+  position: relative; width: 132px; height: 132px; margin: 36px auto 44px; display: grid; place-items: center;
+  border-radius: 50%; background: linear-gradient(145deg, #ffffff, var(--oido-soft)); box-shadow: var(--oido-shadow);
+  ion-icon { font-size: 68px; color: var(--ion-color-primary); }
+  .ring { position: absolute; border-radius: 50%; border: 2px solid var(--oido-mint); opacity: 0.5; }
+  .r1 { inset: -14px; opacity: 0.45; }
+  .r2 { inset: -28px; opacity: 0.2; }
+}
+
+.panel { background: #fff; border-radius: 24px; padding: 22px 20px; box-shadow: var(--oido-shadow); }
+.label { display: block; font-weight: 700; margin: 0 0 8px; &:not(:first-child) { margin-top: 20px; } }
+.error { color: var(--ion-color-danger); font-size: 0.85rem; margin-top: 6px; }
+
+ion-input { --background: #f6fbfb; --border-radius: 14px; --border-color: var(--oido-outline); }
+
+.ears { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ear {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 18px 8px; border-radius: 20px; border: 2px solid var(--oido-outline);
+  background: #fff; color: var(--ion-text-color); font: inherit; font-weight: 600; cursor: pointer;
+  .ear-icon { font-size: 44px; color: var(--oido-muted); }
+  .flip { transform: scaleX(-1); } /* el oído izquierdo se muestra reflejado */
+  .check { position: absolute; top: 8px; right: 8px; font-size: 24px; color: var(--ion-color-primary); }
+  &.selected { border-color: var(--ion-color-primary); background: var(--oido-soft); .ear-icon { color: var(--ion-color-primary); } }
+}
+
+.privacy {
+  display: flex; gap: 8px; align-items: center; justify-content: center;
+  color: var(--oido-muted); font-size: 0.82rem; margin: 24px 4px 28px;
+  ion-icon { flex: none; font-size: 16px; }
+}

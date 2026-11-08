@@ -1,0 +1,36 @@
+<ion-content>
+  <header class="head">
+    <h1>Historial</h1>
+    @if (sessions().length > 0) {
+      <p class="muted">{{ sessions().length }} {{ sessions().length === 1 ? 'sesión' : 'sesiones' }} · {{ duration(totalSeconds()) }} escuchando</p>
+    } @else {
+      <p class="muted">Tus sesiones de escucha aparecerán aquí.</p>
+    }
+  </header>
+
+  @if (sessions().length === 0) {
+    <div class="empty">
+      <div class="chip-icon big"><ion-icon name="time-outline"></ion-icon></div>
+      <h2>Aún no hay sesiones</h2>
+      <p class="muted">Cada vez que actives la amplificación en Inicio, se guardará aquí.</p>
+    </div>
+  } @else {
+    <ion-list lines="none" inset="true">
+      @for (session of sessions(); track session.id) {
+        <ion-item>
+          <div slot="start" class="chip-icon"><ion-icon name="mic-outline"></ion-icon></div>
+          <ion-label>
+            <h3>{{ session.start | date: "d MMM y, h:mm a" }}</h3>
+            <p>{{ duration(session.seconds) }} · Oído {{ earLabel[session.ear] }} · Modo {{ modeLabel[session.mode] }}</p>
+          </ion-label>
+        </ion-item>
+      }
+    </ion-list>
+    <div class="actions">
+      <ion-button fill="outline" color="danger" shape="round" (click)="confirmClear()">
+        <ion-icon slot="start" name="trash-outline"></ion-icon>
+        Borrar historial
+      </ion-button>
+    </div>
+  }
+</ion-content>

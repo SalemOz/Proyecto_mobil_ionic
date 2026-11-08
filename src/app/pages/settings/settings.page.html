@@ -1,0 +1,54 @@
+<ion-content>
+  <header class="head"><h1>Ajustes</h1></header>
+
+  <section class="profile">
+    <div class="avatar" aria-hidden="true">{{ initial() }}</div>
+    <div>
+      <strong>{{ profile()?.name }}</strong>
+      <p class="muted">Oído afectado: {{ earLabel[profile()?.ear ?? 'right'] }}</p>
+    </div>
+  </section>
+
+  <form class="card" [formGroup]="form" (ngSubmit)="save()" novalidate>
+    <div class="card-head"><div class="chip-icon"><ion-icon name="person-outline"></ion-icon></div><h2>Tu perfil</h2></div>
+    <ion-input
+      formControlName="name"
+      label="Nombre"
+      label-placement="floating"
+      fill="outline"
+      maxlength="50"
+    ></ion-input>
+    @if (nameError(); as message) {
+      <p class="error" role="alert">{{ message }}</p>
+    }
+
+    <p class="field-label">Oído afectado</p>
+    <ion-segment mode="ios" [value]="form.controls.ear.value" (ionChange)="onEar($event.detail.value)" aria-label="Oído afectado">
+      <ion-segment-button value="left"><ion-label>Izquierdo</ion-label></ion-segment-button>
+      <ion-segment-button value="right"><ion-label>Derecho</ion-label></ion-segment-button>
+    </ion-segment>
+
+    <ion-button type="submit" expand="block" shape="round">Guardar cambios</ion-button>
+  </form>
+
+  <ion-list lines="full">
+    <ion-item button detail (click)="showHelp()">
+      <ion-icon slot="start" name="help-circle-outline"></ion-icon>
+      <ion-label>Ayuda y soporte</ion-label>
+    </ion-item>
+    <ion-item button detail (click)="showAbout()">
+      <ion-icon slot="start" name="information-circle-outline"></ion-icon>
+      <ion-label>Acerca de Oído+</ion-label>
+    </ion-item>
+    <ion-item button detail="false" (click)="confirmClear()">
+      <ion-icon slot="start" name="trash-outline"></ion-icon>
+      <ion-label>Borrar historial</ion-label>
+    </ion-item>
+    <ion-item button detail="false" (click)="confirmReset()">
+      <ion-icon slot="start" name="refresh-outline" color="danger"></ion-icon>
+      <ion-label color="danger">Cerrar sesión</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <p class="privacy muted">Tus datos se guardan solo en este teléfono.</p>
+</ion-content>

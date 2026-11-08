@@ -1,0 +1,131 @@
+<ion-content>
+  <header class="hero">
+    <p class="eyebrow">{{ greeting() }}</p>
+    <h1>{{ profile()?.name }} 👋</h1>
+    <ion-chip>
+      <ion-icon name="ear-outline"></ion-icon>
+      <ion-label>Oído {{ earName() }} afectado</ion-label>
+    </ion-chip>
+  </header>
+
+  <section class="power">
+    <div class="stage" [class.on]="audio.active()">
+      <div class="halo" [style.--level]="audio.level()"></div>
+      <button
+        type="button"
+        class="power-btn"
+        [class.on]="audio.active()"
+        [disabled]="busy()"
+        [attr.aria-pressed]="audio.active()"
+        aria-label="Amplificación activa"
+        (click)="toggleAmplification()"
+      >
+        <ion-icon name="ear-outline"></ion-icon>
+      </button>
+    </div>
+    <p class="state" aria-live="polite">
+      {{ audio.active() ? 'Escuchando tu entorno' : 'Toca para empezar a escuchar' }}
+    </p>
+    <p class="sub">
+      <span class="dot" [class.on]="audio.active()"></span>
+      {{ audio.active() ? 'Micrófono activo · el sonido pasa a tu oído sano' : 'Micrófono apagado' }}
+    </p>
+    @if (audio.active() && audio.inputLabel(); as label) {
+      <p class="input-label">Entrada: {{ label }}</p>
+    }
+  </section>
+
+  <p class="tip-headset">
+    <ion-icon name="headset-outline"></ion-icon>
+    Usa audífonos con cable. Con Bluetooth el sonido puede salir por los dos oídos y más bajo. Mientras amplifica, ajusta el volumen con los botones del teléfono.
+  </p>
+
+  <ion-card>
+    <ion-card-content>
+      <div class="card-head">
+        <div class="chip-icon"><ion-icon name="volume-high-outline"></ion-icon></div>
+        <h2>Volumen de salida</h2>
+        <strong class="value">{{ volume() }}%</strong>
+      </div>
+      <ion-range
+        aria-label="Volumen de salida"
+        [min]="0"
+        [max]="100"
+        [value]="volume()"
+        (ionInput)="onVolume($event.detail.value)"
+      >
+        <ion-icon slot="start" name="volume-low-outline"></ion-icon>
+        <ion-icon slot="end" name="volume-high-outline"></ion-icon>
+      </ion-range>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-content>
+      <div class="card-head">
+        <div class="chip-icon"><ion-icon name="leaf-outline"></ion-icon></div>
+        <div>
+          <h2>Modo de ambiente</h2>
+          <p class="muted">Cuánta conciencia del entorno deseas.</p>
+        </div>
+      </div>
+      <ion-segment mode="ios" [value]="mode()" (ionChange)="onMode($event.detail.value)" aria-label="Modo de ambiente">
+        @for (m of modes; track m) {
+          <ion-segment-button [value]="m"><ion-label>{{ modeLabel[m] }}</ion-label></ion-segment-button>
+        }
+      </ion-segment>
+      <p class="muted mode-hint">{{ modeHint() }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="weather-card">
+    <ion-card-content>
+      <div class="card-head">
+        <div class="chip-icon">
+          <ion-icon [name]="weatherInfo()?.icon ?? 'cloud-outline'"></ion-icon>
+        </div>
+        <h2>Clima actual</h2>
+        <ion-button fill="clear" size="small" class="refresh" aria-label="Actualizar clima" (click)="loadWeather()">
+          <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+        </ion-button>
+      </div>
+
+      @switch (weatherState()) {
+        @case ('loading') {
+          <div class="loading"><ion-spinner name="dots"></ion-spinner> <span class="muted">Cargando clima…</span></div>
+        }
+        @case ('error') {
+          <p class="muted">No se pudo cargar el clima. Revisa tu conexión a internet e inténtalo de nuevo.</p>
+        }
+        @case ('ok') {
+          @if (weatherData(); as data) {
+            <p class="place muted">
+              <ion-icon name="location-outline"></ion-icon>
+              {{ data.fromGps ? 'Tu ubicación (GPS)' : 'Neiva (ubicación por defecto)' }}
+            </p>
+            <div class="weather">
+              <div class="main">
+                <strong class="temp">{{ data.weather.temperature | number: '1.0-0' }}°C</strong>
+                <span>{{ weatherInfo()?.text }}</span>
+              </div>
+              <div class="details">
+                <span><ion-icon name="water-outline"></ion-icon> Humedad {{ data.weather.humidity }}%</span>
+                <span><ion-icon name="speedometer-outline"></ion-icon> Viento {{ data.weather.wind | number: '1.0-0' }} km/h</span>
+              </div>
+            </div>
+
+            @if (suggestion(); as tip) {
+              <div class="suggest">
+                <ion-icon name="bulb-outline"></ion-icon>
+                <span>{{ tip.reason }}</span>
+                @if (tip.mode !== mode()) {
+                  <ion-button size="small" shape="round" (click)="onMode(tip.mode)">Usar modo {{ modeLabel[tip.mode] }}</ion-button>
+                }
+              </div>
+            }
+          }
+        }
+      }
+    </ion-card-content>
+  </ion-card>
+</ion-content>

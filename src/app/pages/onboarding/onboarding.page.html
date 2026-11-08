@@ -1,0 +1,58 @@
+<ion-content class="ion-padding">
+  <form class="wrap" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="art" aria-hidden="true">
+      <span class="ring r1"></span>
+      <span class="ring r2"></span>
+      <ion-icon name="ear-outline"></ion-icon>
+    </div>
+    <p class="brand">Oído+</p>
+    <h1>Cuéntanos sobre ti</h1>
+    <p class="muted intro">Para personalizar tu experiencia, necesitamos conocerte un poco.</p>
+
+    <section class="panel">
+      <label class="label" for="name">¿Cómo te llamas?</label>
+      <ion-input
+        id="name"
+        formControlName="name"
+        fill="outline"
+        placeholder="Escribe tu nombre…"
+        maxlength="50"
+        autocomplete="given-name"
+        aria-label="Nombre"
+      ></ion-input>
+      @if (nameError(); as message) {
+        <p class="error" role="alert">{{ message }}</p>
+      }
+
+      <p class="label">¿Qué oído está afectado?</p>
+      <div class="ears" role="radiogroup" aria-label="Oído afectado">
+        @for (ear of ears; track ear.value) {
+          <button
+            type="button"
+            role="radio"
+            class="ear"
+            [class.selected]="form.controls.ear.value === ear.value"
+            [attr.aria-checked]="form.controls.ear.value === ear.value"
+            (click)="selectEar(ear.value)"
+          >
+            @if (form.controls.ear.value === ear.value) {
+              <ion-icon name="checkmark-circle" class="check"></ion-icon>
+            }
+            <ion-icon name="ear-outline" class="ear-icon" [class.flip]="ear.value === 'left'"></ion-icon>
+            <span>{{ ear.label }}</span>
+          </button>
+        }
+      </div>
+    </section>
+
+    <p class="privacy">
+      <ion-icon name="lock-closed-outline"></ion-icon>
+      Solo solicitamos la información necesaria para configurar tu experiencia.
+    </p>
+
+    <ion-button type="submit" expand="block" size="large" shape="round">
+      Continuar
+      <ion-icon slot="end" name="arrow-forward"></ion-icon>
+    </ion-button>
+  </form>
+</ion-content>

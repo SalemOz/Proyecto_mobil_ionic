@@ -1,0 +1,68 @@
+<ion-content>
+  <header class="head">
+    <h1>Bienestar</h1>
+    <p class="muted">Información confiable para cuidar tu audición.</p>
+  </header>
+
+  <ion-searchbar
+    placeholder="Busca un tema de salud…"
+    enterkeyhint="search"
+    (ionChange)="onSearchbar($event)"
+    aria-label="Buscar un tema de salud"
+  ></ion-searchbar>
+
+  <div class="topics" role="group" aria-label="Temas sugeridos">
+    @for (topic of topics; track topic) {
+      <button type="button" class="topic" [class.active]="selected() === topic" (click)="search(topic)">{{ topic }}</button>
+    }
+  </div>
+
+  <p class="notice">
+    <ion-icon name="information-circle-outline"></ion-icon>
+    Información educativa. No reemplaza la consulta con un profesional de la salud.
+  </p>
+
+  @switch (state()) {
+    @case ('loading') {
+      <div class="state"><ion-spinner name="dots"></ion-spinner><p class="muted">Buscando información…</p></div>
+    }
+    @case ('error') {
+      <div class="state">
+        <p>No se pudo cargar la información.</p>
+        <p class="muted">Revisa tu conexión a internet e inténtalo de nuevo.</p>
+        <ion-button fill="outline" shape="round" size="small" (click)="search(selected())">
+          <ion-icon slot="start" name="refresh-outline"></ion-icon>
+          Reintentar
+        </ion-button>
+      </div>
+    }
+    @case ('empty') {
+      <div class="state">
+        <p>No encontramos resultados para «{{ selected() }}».</p>
+        <p class="muted">Prueba con otra palabra, por ejemplo «oído» o «audición».</p>
+      </div>
+    }
+    @case ('ok') {
+      @for (topic of results(); track topic.url) {
+        <ion-card>
+          <ion-card-content>
+            <div class="card-head">
+              <div class="chip-icon"><ion-icon name="leaf-outline"></ion-icon></div>
+              <h2>{{ topic.title }}</h2>
+            </div>
+            <p class="summary" [class.clamped]="!isExpanded(topic)">{{ topic.summary }}</p>
+            <div class="actions">
+              <button type="button" class="link" (click)="toggle(topic)">{{ isExpanded(topic) ? 'Ver menos' : 'Ver más' }}</button>
+              <ion-button fill="outline" size="small" shape="round" [href]="topic.url" target="_blank" rel="noopener">
+                Leer en MedlinePlus
+                <ion-icon slot="end" name="open-outline"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      }
+    }
+  }
+
+  <p class="source">Fuente: MedlinePlus.gov · Biblioteca Nacional de Medicina de EE. UU.</p>
+</ion-content>
