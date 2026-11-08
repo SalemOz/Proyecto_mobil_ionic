@@ -20,6 +20,7 @@ import {
   IonSegmentButton,
   IonSkeletonText,
 } from '@ionic/angular';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { addIcons } from 'ionicons';
 import {
   bulbOutline,
@@ -157,11 +158,21 @@ export class HomePage implements OnInit {
       } else {
         await this.audio.start(profile.ear, this.volume(), this.mode());
       }
+      await this.vibrate();
     } catch (error) {
       const code = error instanceof AudioError ? error.code : 'unknown';
       await this.ui.toast(AUDIO_ERROR_TEXT[code], 3500);
     } finally {
       this.busy.set(false);
+    }
+  }
+
+  /** Vibración corta al activar o desactivar con éxito; si no hay háptica (web), se ignora. */
+  private async vibrate(): Promise<void> {
+    try {
+      await Haptics.impact({ style: ImpactStyle.Medium });
+    } catch {
+      // sin háptica disponible: no afecta a la amplificación
     }
   }
 
