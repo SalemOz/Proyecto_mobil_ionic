@@ -9,7 +9,10 @@ const DEFAULT_SETTINGS: Settings = { ambientMode: 'low' as AmbientMode, volume: 
 @Injectable({ providedIn: 'root' })
 export class StorageService {
   readonly profile = signal<Profile | null>(this.read<Profile | null>(KEYS.profile, null));
-  readonly settings = signal<Settings>({ ...DEFAULT_SETTINGS, ...this.read<Partial<Settings>>(KEYS.settings, {}) });
+  readonly settings = signal<Settings>({
+    ...DEFAULT_SETTINGS,
+    ...this.read<Partial<Settings>>(KEYS.settings, {}),
+  });
   readonly sessions = signal<Session[]>(this.read<Session[]>(KEYS.sessions, []));
 
   saveProfile(profile: Profile): void {

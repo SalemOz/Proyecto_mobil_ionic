@@ -28,4 +28,8 @@ export interface Weather {
 }
 
 export const EAR_LABEL: Record<Ear, string> = { left: 'izquierdo', right: 'derecho' };
-export const MODE_LABEL: Record<AmbientMode, string> = { low: 'Bajo', medium: 'Medio', high: 'Alto' };
+export const MODE_LABEL: Record<AmbientMode, string> = {
+  low: 'Bajo',
+  medium: 'Medio',
+  high: 'Alto',
+};

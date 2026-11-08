@@ -15,7 +15,7 @@ export const AUDIO_ERROR_TEXT: Record<AudioErrorCode, string> = {
   denied: 'Necesitamos permiso del micrófono. Actívalo en los ajustes del teléfono para esta app.',
   'no-mic': 'No se encontró un micrófono disponible.',
   unsupported: 'Este dispositivo no permite capturar audio desde la app.',
-  unknown: 'No se pudo iniciar la amplificación. Inténtalo de nuevo.'
+  unknown: 'No se pudo iniciar la amplificación. Inténtalo de nuevo.',
 };
 
 /** Cuánto se refuerza el sonido según el modo de ambiente (mayor = más conciencia del entorno). */
@@ -67,7 +67,12 @@ export class AudioService {
     try {
       // Sin cancelación de eco, supresión de ruido ni control automático: queremos el sonido del entorno tal cual.
       const stream = await navigator.mediaDevices.getUserMedia({
-        audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false, channelCount: 1 }
+        audio: {
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: false,
+          channelCount: 1,
+        },
       });
       await ctx.resume();
 
@@ -93,7 +98,9 @@ export class AudioService {
       this.applyParams(true);
 
       // Si el micrófono se corta (llamada, otra app), se detiene limpiamente.
-      stream.getAudioTracks()[0]?.addEventListener('ended', () => this.zone.run(() => void this.stop()));
+      stream
+        .getAudioTracks()[0]
+        ?.addEventListener('ended', () => this.zone.run(() => void this.stop()));
 
       this.inputLabel.set(stream.getAudioTracks()[0]?.label ?? '');
       this.startedAt = Date.now();
@@ -124,7 +131,7 @@ export class AudioService {
         end: new Date().toISOString(),
         seconds,
         ear: this.ear,
-        mode: this.mode
+        mode: this.mode,
       });
     }
 
@@ -173,13 +180,19 @@ export class AudioService {
     const samples = new Uint8Array(analyser.fftSize);
     this.zone.runOutsideAngular(() => {
       this.meterTimer = window.setInterval(() => {
+        // Con la app en segundo plano no hay nada que dibujar: se evita el cálculo y el redibujado.
+        if (document.hidden) return;
         analyser.getByteTimeDomainData(samples);
         let sum = 0;
         for (const value of samples) {
           const x = (value - 128) / 128;
           sum += x * x;
         }
-        this.level.set(Math.min(1, Math.sqrt(sum / samples.length) * 4));
+        // Se redondea a 2 decimales y se avisa solo con cambios de 0.02 o más: el medidor se ve
+        // igual, pero la vista se redibuja muchas menos veces por segundo.
+        const next = Math.round(Math.min(1, Math.sqrt(sum / samples.length) * 4) * 100) / 100;
+        if (Math.abs(next - this.level()) < 0.02) return;
+        this.level.set(next);
       }, 100);
     });
   }
@@ -187,7 +200,8 @@ export class AudioService {
   private toAudioError(error: unknown): AudioError {
     const name = (error as { name?: string })?.name;
     if (name === 'NotAllowedError' || name === 'SecurityError') return new AudioError('denied');
-    if (name === 'NotFoundError' || name === 'OverconstrainedError') return new AudioError('no-mic');
+    if (name === 'NotFoundError' || name === 'OverconstrainedError')
+      return new AudioError('no-mic');
     return new AudioError('unknown');
   }
 }

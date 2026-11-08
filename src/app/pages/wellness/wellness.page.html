@@ -13,7 +13,14 @@
 
   <div class="topics" role="group" aria-label="Temas sugeridos">
     @for (topic of topics; track topic) {
-      <button type="button" class="topic" [class.active]="selected() === topic" (click)="search(topic)">{{ topic }}</button>
+      <button
+        type="button"
+        class="topic"
+        [class.active]="selected() === topic"
+        (click)="search(topic)"
+      >
+        {{ topic }}
+      </button>
     }
   </div>
 
@@ -24,7 +31,14 @@
 
   @switch (state()) {
     @case ('loading') {
-      <div class="state"><ion-spinner name="dots"></ion-spinner><p class="muted">Buscando información…</p></div>
+      <ion-card>
+        <ion-card-content class="skeleton" aria-live="polite">
+          <span class="sr-only">Buscando información…</span>
+          <ion-skeleton-text [animated]="animateSkeleton" style="width: 60%"></ion-skeleton-text>
+          <ion-skeleton-text [animated]="animateSkeleton" style="width: 90%"></ion-skeleton-text>
+          <ion-skeleton-text [animated]="animateSkeleton" style="width: 75%"></ion-skeleton-text>
+        </ion-card-content>
+      </ion-card>
     }
     @case ('error') {
       <div class="state">
@@ -52,8 +66,17 @@
             </div>
             <p class="summary" [class.clamped]="!isExpanded(topic)">{{ topic.summary }}</p>
             <div class="actions">
-              <button type="button" class="link" (click)="toggle(topic)">{{ isExpanded(topic) ? 'Ver menos' : 'Ver más' }}</button>
-              <ion-button fill="outline" size="small" shape="round" [href]="topic.url" target="_blank" rel="noopener">
+              <button type="button" class="link" (click)="toggle(topic)">
+                {{ isExpanded(topic) ? 'Ver menos' : 'Ver más' }}
+              </button>
+              <ion-button
+                fill="outline"
+                size="small"
+                shape="round"
+                [href]="topic.url"
+                target="_blank"
+                rel="noopener"
+              >
                 Leer en MedlinePlus
                 <ion-icon slot="end" name="open-outline"></ion-icon>
               </ion-button>
