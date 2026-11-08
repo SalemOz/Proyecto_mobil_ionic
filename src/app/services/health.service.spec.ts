@@ -31,7 +31,9 @@ describe('parseTopics', () => {
   });
 
   it('descarta enlaces que no son de MedlinePlus y XML inválido', () => {
-    expect(parseTopics(NESTED.replace('https://medlineplus.gov', 'https://sitio-falso.com'))).toEqual([]);
+    expect(
+      parseTopics(NESTED.replace('https://medlineplus.gov', 'https://sitio-falso.com')),
+    ).toEqual([]);
     expect(parseTopics('esto no es xml')).toEqual([]);
   });
 });

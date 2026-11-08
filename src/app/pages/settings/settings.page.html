@@ -10,7 +10,10 @@
   </section>
 
   <form class="card" [formGroup]="form" (ngSubmit)="save()" novalidate>
-    <div class="card-head"><div class="chip-icon"><ion-icon name="person-outline"></ion-icon></div><h2>Tu perfil</h2></div>
+    <div class="card-head">
+      <div class="chip-icon"><ion-icon name="person-outline"></ion-icon></div>
+      <h2>Tu perfil</h2>
+    </div>
     <ion-input
       formControlName="name"
       label="Nombre"
@@ -23,7 +26,12 @@
     }
 
     <p class="field-label">Oído afectado</p>
-    <ion-segment mode="ios" [value]="form.controls.ear.value" (ionChange)="onEar($event.detail.value)" aria-label="Oído afectado">
+    <ion-segment
+      mode="ios"
+      [value]="form.controls.ear.value"
+      (ionChange)="onEar($event.detail.value)"
+      aria-label="Oído afectado"
+    >
       <ion-segment-button value="left"><ion-label>Izquierdo</ion-label></ion-segment-button>
       <ion-segment-button value="right"><ion-label>Derecho</ion-label></ion-segment-button>
     </ion-segment>

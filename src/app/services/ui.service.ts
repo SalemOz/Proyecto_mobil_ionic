@@ -23,8 +23,8 @@ export class UiService {
       message: '¿Seguro que quieres borrar todas las sesiones registradas?',
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
-        { text: 'Borrar', role: 'destructive', handler: () => this.store.clearSessions() }
-      ]
+        { text: 'Borrar', role: 'destructive', handler: () => this.store.clearSessions() },
+      ],
     });
     await alert.present();
   }
@@ -33,7 +33,7 @@ export class UiService {
   async toast(
     message: string,
     duration = 2000,
-    position: ToastOptions['position'] = 'top'
+    position: ToastOptions['position'] = 'top',
   ): Promise<void> {
     const toast = await this.toastController.create({ message, duration, position });
     await toast.present();
@@ -45,7 +45,7 @@ export class UiService {
       header,
       message,
       cssClass: 'oido-alert',
-      buttons: ['Entendido']
+      buttons: ['Entendido'],
     });
     await alert.present();
   }
@@ -62,8 +62,8 @@ export class UiService {
       message: 'Se borrarán tu perfil y tu historial y volverás a la pantalla inicial. ¿Continuar?',
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
-        { text: 'Cerrar sesión', role: 'destructive' }
-      ]
+        { text: 'Cerrar sesión', role: 'destructive' },
+      ],
     });
     await alert.present();
     const { role } = await alert.onDidDismiss();

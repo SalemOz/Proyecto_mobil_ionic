@@ -8,7 +8,7 @@ import { heartOutline, homeOutline, settingsOutline, timeOutline } from 'ionicon
   imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel],
   templateUrl: './tabs.page.html',
   // Solo contiene la barra de pestañas: no tiene estado propio que refrescar.
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabsPage {
   constructor() {

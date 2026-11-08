@@ -13,9 +13,14 @@ export interface HealthTopic {
 
 /** Quita las etiquetas HTML y conserva los párrafos como saltos de línea. */
 function htmlToText(raw: string, keepParagraphs = false): string {
-  const withBreaks = keepParagraphs ? raw.replace(/<\/p>\s*/gi, '\n\n').replace(/<br\s*\/?>/gi, '\n') : raw;
+  const withBreaks = keepParagraphs
+    ? raw.replace(/<\/p>\s*/gi, '\n\n').replace(/<br\s*\/?>/gi, '\n')
+    : raw;
   const text = new DOMParser().parseFromString(withBreaks, 'text/html').body.textContent ?? '';
-  return text.replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
+  return text
+    .replace(/[ \t]+/g, ' ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
 }
 
 /** Solo se aceptan enlaces que apunten a MedlinePlus. */
@@ -66,10 +71,17 @@ export class HealthService {
     // CapacitorHttp hace la petición desde la capa nativa, así no depende de las reglas CORS del WebView.
     const response = await CapacitorHttp.get({
       url: API_URL,
-      params: { db: 'healthTopicsSpanish', term: clean, retmax: '5', rettype: 'brief', tool: 'oido-plus' },
-      responseType: 'text'
+      params: {
+        db: 'healthTopicsSpanish',
+        term: clean,
+        retmax: '5',
+        rettype: 'brief',
+        tool: 'oido-plus',
+      },
+      responseType: 'text',
     });
-    if (response.status < 200 || response.status >= 300) throw new Error(`MedlinePlus respondió ${response.status}`);
+    if (response.status < 200 || response.status >= 300)
+      throw new Error(`MedlinePlus respondió ${response.status}`);
 
     const topics = parseTopics(String(response.data));
     if (topics.length > 0) this.writeCache(clean, topics);

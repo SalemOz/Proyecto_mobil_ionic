@@ -1,37 +1,83 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import {
-  IonButton, IonCard, IonCardContent, IonChip, IonContent, IonIcon, IonLabel,
-  IonRange, IonSegment, IonSegmentButton, IonSpinner
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import {
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonChip,
+  IonContent,
+  IonIcon,
+  IonLabel,
+  IonRange,
+  IonSegment,
+  IonSegmentButton,
+  IonSpinner,
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
-  bulbOutline, cloudOutline, earOutline, headsetOutline, helpCircleOutline, leafOutline, locationOutline,
-  partlySunnyOutline, rainyOutline, refreshOutline, snowOutline, speedometerOutline, sunnyOutline,
-  thermometerOutline, thunderstormOutline, volumeHighOutline, volumeLowOutline, waterOutline
+  bulbOutline,
+  cloudOutline,
+  earOutline,
+  headsetOutline,
+  helpCircleOutline,
+  leafOutline,
+  locationOutline,
+  partlySunnyOutline,
+  rainyOutline,
+  refreshOutline,
+  snowOutline,
+  speedometerOutline,
+  sunnyOutline,
+  thermometerOutline,
+  thunderstormOutline,
+  volumeHighOutline,
+  volumeLowOutline,
+  waterOutline,
 } from 'ionicons/icons';
 import { AmbientMode, EAR_LABEL, MODE_LABEL } from '../../models';
 import { AUDIO_ERROR_TEXT, AudioError, AudioService } from '../../services/audio.service';
 import { StorageService } from '../../services/storage.service';
 import { UiService } from '../../services/ui.service';
-import { WeatherResult, WeatherService, describeWeather, suggestMode } from '../../services/weather.service';
+import {
+  WeatherResult,
+  WeatherService,
+  describeWeather,
+  suggestMode,
+} from '../../services/weather.service';
 
 const MODE_HINT: Record<AmbientMode, string> = {
   low: 'Escuchas lo esencial, sin saturar tu oído.',
   medium: 'Un equilibrio entre claridad y comodidad.',
-  high: 'Máxima conciencia de lo que ocurre a tu alrededor.'
+  high: 'Máxima conciencia de lo que ocurre a tu alrededor.',
 };
 
 @Component({
   selector: 'app-home',
   imports: [
-    DecimalPipe, IonContent, IonCard, IonCardContent, IonRange, IonSegment, IonSegmentButton,
-    IonLabel, IonIcon, IonChip, IonButton, IonSpinner
+    DecimalPipe,
+    IonContent,
+    IonCard,
+    IonCardContent,
+    IonRange,
+    IonSegment,
+    IonSegmentButton,
+    IonLabel,
+    IonIcon,
+    IonChip,
+    IonButton,
+    IonSpinner,
   ],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',
   // Todo lo que se muestra sale de signals: la vista solo se revisa cuando alguno cambia.
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePage implements OnInit {
   protected readonly store = inject(StorageService);
@@ -70,9 +116,24 @@ export class HomePage implements OnInit {
 
   constructor() {
     addIcons({
-      earOutline, headsetOutline, refreshOutline, locationOutline, thermometerOutline, waterOutline,
-      speedometerOutline, bulbOutline, leafOutline, volumeLowOutline, volumeHighOutline, sunnyOutline,
-      partlySunnyOutline, cloudOutline, rainyOutline, snowOutline, thunderstormOutline, helpCircleOutline
+      earOutline,
+      headsetOutline,
+      refreshOutline,
+      locationOutline,
+      thermometerOutline,
+      waterOutline,
+      speedometerOutline,
+      bulbOutline,
+      leafOutline,
+      volumeLowOutline,
+      volumeHighOutline,
+      sunnyOutline,
+      partlySunnyOutline,
+      cloudOutline,
+      rainyOutline,
+      snowOutline,
+      thunderstormOutline,
+      helpCircleOutline,
     });
   }
 
@@ -121,5 +182,4 @@ export class HomePage implements OnInit {
       this.weatherState.set('error');
     }
   }
-
 }
