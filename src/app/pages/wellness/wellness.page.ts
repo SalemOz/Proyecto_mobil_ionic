@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { IonButton, IonCard, IonCardContent, IonContent, IonIcon, IonSearchbar, IonSpinner } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { informationCircleOutline, leafOutline, openOutline, refreshOutline } from 'ionicons/icons';
@@ -16,7 +16,9 @@ const TOPICS = [
   selector: 'app-wellness',
   imports: [IonContent, IonCard, IonCardContent, IonIcon, IonButton, IonSearchbar, IonSpinner],
   templateUrl: './wellness.page.html',
-  styleUrl: './wellness.page.scss'
+  styleUrl: './wellness.page.scss',
+  // Resultados, estado y temas abiertos son signals: la vista solo se revisa cuando cambian.
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WellnessPage implements OnInit {
   private readonly health = inject(HealthService);
