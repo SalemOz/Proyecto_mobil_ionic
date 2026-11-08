@@ -108,8 +108,11 @@
 
       @switch (weatherState()) {
         @case ('loading') {
-          <div class="loading">
-            <ion-spinner name="dots"></ion-spinner> <span class="muted">Cargando clima…</span>
+          <div class="skeleton" aria-live="polite">
+            <span class="sr-only">Cargando clima…</span>
+            <ion-skeleton-text [animated]="animateSkeleton" style="width: 60%"></ion-skeleton-text>
+            <ion-skeleton-text [animated]="animateSkeleton" style="width: 90%"></ion-skeleton-text>
+            <ion-skeleton-text [animated]="animateSkeleton" style="width: 75%"></ion-skeleton-text>
           </div>
         }
         @case ('error') {

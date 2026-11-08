@@ -18,17 +18,17 @@
   --ion-color-success-shade: #298b73;
   --ion-color-success-tint: #43a88f;
 
-  --ion-color-danger: #d64550;
-  --ion-color-danger-rgb: 214, 69, 80;
+  --ion-color-danger: #c0333d;
+  --ion-color-danger-rgb: 192, 51, 61;
   --ion-color-danger-contrast: #ffffff;
   --ion-color-danger-contrast-rgb: 255, 255, 255;
-  --ion-color-danger-shade: #bc3d46;
-  --ion-color-danger-tint: #da5862;
+  --ion-color-danger-shade: #a92d36;
+  --ion-color-danger-tint: #c64750;
 
   --ion-background-color: #f3f9f9;
   --ion-text-color: #16384a;
 
-  --oido-muted: #55707e;
+  --oido-muted: #4a6573;
   --oido-outline: #d3e6e8;
   --oido-soft: #e2f3f2;
   --oido-mint: #7fd1c0;
@@ -74,6 +74,7 @@ p {
 
 /* Tarjetas */
 ion-card {
+  --color: var(--ion-text-color);
   margin: 14px 16px;
   border-radius: 24px;
   background: #fff;
@@ -114,8 +115,11 @@ ion-chip {
 ion-range {
   --bar-background: var(--oido-soft);
   --bar-background-active: var(--ion-color-primary);
-  --knob-background: #fff;
+  --knob-background: var(--ion-color-primary);
+  --knob-box-shadow: 0 2px 8px rgba(31, 122, 140, 0.4);
   --knob-size: 28px;
+  --bar-height: 6px;
+  min-height: 44px;
   padding: 0;
 }
 ion-segment {
@@ -125,6 +129,14 @@ ion-segment-button {
   --color: var(--oido-muted);
   --color-checked: var(--ion-color-primary-shade);
   font-weight: 600;
+  min-height: 44px;
+}
+/* Objetivos táctiles de al menos 44 px y capitalización normal */
+ion-button {
+  min-height: 44px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 600;
 }
 ion-tab-bar {
   --background: #fff;
@@ -133,6 +145,26 @@ ion-tab-bar {
 }
 ion-tab-button {
   --color-selected: var(--ion-color-primary);
+  ion-label {
+    font-size: 0.8125rem;
+  }
+}
+
+/* Texto solo para lectores de pantalla */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Esqueletos de carga: tres líneas de ancho distinto */
+.skeleton ion-skeleton-text {
+  height: 14px;
+  margin: 0 0 10px;
+  border-radius: 7px;
 }
 
 /* Alertas: respetan los saltos de línea (\n) del mensaje y se ven más suaves */
