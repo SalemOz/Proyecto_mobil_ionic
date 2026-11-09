@@ -4,6 +4,7 @@ export type AmbientMode = 'low' | 'medium' | 'high';
 export interface Profile {
   name: string;
   ear: Ear; // oído afectado
+  avatar?: string; // nombre del archivo de la foto en Directory.Data (no es una ruta absoluta)
 }
 
 export interface Settings {
