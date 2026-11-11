@@ -17,7 +17,7 @@ Proyecto final de *Programación de Dispositivos Móviles* (USCO).
 | Inicio | `pages/home` | Activa/desactiva la amplificación, volumen, modo de ambiente, nivel de sonido en vivo y clima actual con sugerencia de modo. |
 | Bienestar | `pages/wellness` | Información de salud en español sobre audición (MedlinePlus): temas sugeridos, buscador y enlace a la fuente. |
 | Historial | `pages/history` | Lista de sesiones de uso (fecha, duración, oído y modo). |
-| Ajustes | `pages/settings` | Editar perfil, ayuda, acerca de, borrar historial y cerrar sesión. |
+| Ajustes | `pages/settings` | Editar perfil (con foto), ayuda, acerca de, borrar historial y cerrar sesión. |
 
 Las pestañas Inicio / Historial / Ajustes están en `pages/tabs` (`ion-tabs` + Angular Router).
 
@@ -62,6 +62,7 @@ src/app/
 ├── validators.ts                            # validación del nombre
 ├── services/
 │   ├── storage.service.ts                   # perfil, ajustes e historial (almacenamiento local)
+│   ├── camera.service.ts                    # foto de perfil (Camera + Filesystem)
 │   ├── audio.service.ts                     # motor de audio (Web Audio)
 │   ├── weather.service.ts                   # GPS + Open-Meteo
 │   └── health.service.ts                    # MedlinePlus (información de salud)
@@ -76,14 +77,48 @@ Todo queda en el teléfono (`localStorage` del WebView): `oido.profile`, `oido.s
 (máximo 100 sesiones). No se envía ningún dato personal a internet; solo las coordenadas viajan
 a Open-Meteo para obtener el clima.
 
-## 6. Instalación y ejecución
+La **foto de perfil** es la única excepción: se guarda como archivo JPEG en el almacenamiento privado
+de la app (`Directory.Data` de `@capacitor/filesystem`) y en `oido.profile` solo queda su nombre
+(`avatar`). La imagen nunca se guarda en Base64 dentro de `localStorage`.
+
+## 6. Foto de perfil (Camera + Filesystem)
+
+- **Plugin:** `@capacitor/camera` con la API moderna desde la 8.1: `Camera.takePhoto()` para la cámara
+y `Camera.chooseFromGallery()` para la galería (los antiguos `getPhoto()` / `pickImages()` no se usan).
+Ionic muestra las dos opciones con `ActionSheetController`; no hay plugins de menús adicionales.
+- **Plugin:** `@capacitor/filesystem` (solo para esta funcionalidad). Camera entrega la foto en una
+ruta temporal de la caché, así que se copia a `Directory.Data`, el almacenamiento privado de la app.
+Se guarda una sola foto (`avatar-<marca de tiempo>.jpg`), se borra la anterior al reemplazarla y al
+cerrar sesión. Para mostrarla se obtiene la ruta con `Filesystem.getUri()` y se convierte con
+`Capacitor.convertFileSrc()`, de modo que sigue disponible después de cerrar y abrir la app.
+- **Servicio:** `src/app/services/camera.service.ts` (`CameraService`). Expone `avatarUrl` y `busy`
+como signals. `SettingsPage` solo abre el menú, actualiza el avatar y muestra los avisos
+(permiso denegado o error) mediante `UiService`; ninguna página habla directo con los plugins.
+- **Funcionamiento del avatar:** se toca el círculo de Ajustes → Tomar una foto / Elegir de la galería.
+Si ya hay una foto guardada, el menú incluye **Eliminar foto**, que la quita sin cerrar sesión y sin
+tocar el nombre, el oído ni el historial (después de confirmar).
+Mientras se procesa se muestra un indicador; si no hay foto (o el usuario cancela) se mantiene la
+inicial del nombre. `Profile.avatar` es opcional, así que los perfiles anteriores siguen funcionando.
+- **Sincronizar Android:** después de compilar la web, una sola vez por cada cambio:
+
+```bash
+ionic build                  # o: npx ng build
+npx cap sync android         # copia www/ y registra los plugins nativos
+npx cap open android         # Android Studio; espera el Gradle Sync
+```
+
+`cap sync` agrega automáticamente `@capacitor/camera` y `@capacitor/filesystem` al proyecto Android.
+No hace falta agregar permisos al `AndroidManifest.xml`: Camera abre la app de cámara del sistema y
+Filesystem escribe en el almacenamiento privado de la aplicación.
+
+## 7. Instalación y ejecución
 
 Requisitos: Node.js, Ionic CLI (`npm i -g @ionic/cli`), Android Studio con JDK 21.
 
 ```bash
 npm install                  # instala dependencias
 npm start                    # probar en el navegador (http://localhost:4200)
-npm test                     # pruebas unitarias (13)
+npm test                     # pruebas unitarias (32)
 
 ionic build                  # compila la web en www/   (equivale a: npx ng build)
 npx cap add android          # solo la primera vez
@@ -98,7 +133,7 @@ Regla de oro: cada vez que cambies código, repite `ionic build` y `npx cap sync
 Android Studio → **Build › Generate App Bundles or APKs › Generate APKs** → *locate*.
 El archivo queda en `android/app/build/outputs/apk/debug/app-debug.apk`.
 
-## 7. Permisos de Android
+## 8. Permisos de Android
 
 | Permiso | Para qué |
 | --- | --- |
@@ -108,8 +143,10 @@ El archivo queda en `android/app/build/outputs/apk/debug/app-debug.apk`.
 | `INTERNET` | Consultar Open-Meteo |
 
 Los permisos de micrófono y ubicación se piden al usuario la primera vez que se usan.
+La foto de perfil no agrega permisos propios: la cámara se abre con la app del sistema y la imagen
+queda en el almacenamiento privado de Oído+.
 
-## 8. Lista de pruebas en el teléfono
+## 9. Lista de pruebas en el teléfono
 
 1. Abrir la app: aparece el formulario. Probar nombre vacío, `admin`, `Ana123` → muestra error.
 2. Elegir oído y continuar: llega a Inicio con el saludo correcto.
@@ -121,8 +158,13 @@ Los permisos de micrófono y ubicación se piden al usuario la primera vez que s
 8. Clima: aceptar ubicación (muestra "Tu ubicación (GPS)"); negarla (muestra Neiva por defecto).
 9. Pestaña **Bienestar**: carga «Pérdida de audición»; tocar otro tema y buscar uno propio; «Leer en MedlinePlus» abre el navegador.
 10. Ajustes → **Cerrar sesión**: vuelve al formulario y borra los datos.
+11. Ajustes → tocar el avatar → **Tomar una foto** y **Elegir de la galería**: la foto se ve recortada
+    en el círculo (guardar un cambio de nombre u oído no la borra).
+12. Cancelar la cámara o negar el permiso: se conserva la foto anterior (o la inicial) y aparece un aviso.
+13. Tocar el avatar → **Eliminar foto**: confirmar y volver a la inicial; nombre, oído e historial siguen igual.
+14. Cerrar la app por completo y abrirla: la foto de perfil sigue ahí; al cerrar sesión vuelve la inicial.
 
-## 9. Limitaciones conocidas
+## 10. Limitaciones conocidas
 
 - **Retraso (latencia):** el audio pasa por el WebView, así que hay un pequeño retraso entre el sonido real y
   el que se escucha. Con audífonos con cable es menor; con Bluetooth aumenta.
@@ -135,7 +177,7 @@ Los permisos de micrófono y ubicación se piden al usuario la primera vez que s
   Seguir captando con la app minimizada requeriría un servicio nativo en primer plano.
 - No es un dispositivo médico ni reemplaza un audífono; es una ayuda de conciencia del entorno.
 
-## 10. Relación con la rúbrica
+## 11. Relación con la rúbrica
 
 | Entrega | Cumplimiento |
 | --- | --- |

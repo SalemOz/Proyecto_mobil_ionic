@@ -50,6 +50,23 @@ export class UiService {
     await alert.present();
   }
 
+  /** Confirmación de «Eliminar foto». Devuelve true solo si el usuario confirma. */
+  async confirmRemovePhoto(): Promise<boolean> {
+    const alert = await this.alertController.create({
+      header: 'Eliminar foto',
+      cssClass: 'oido-alert',
+      message:
+        '¿Seguro que quieres quitar tu foto de perfil? Volverás a ver la inicial de tu nombre.',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Eliminar', role: 'destructive' },
+      ],
+    });
+    await alert.present();
+    const { role } = await alert.onDidDismiss();
+    return role === 'destructive';
+  }
+
   /**
    * Confirmación de «Cerrar sesión». Devuelve true solo si el usuario confirma.
    * La página sigue siendo dueña de la lógica (detener el audio, borrar datos y navegar),

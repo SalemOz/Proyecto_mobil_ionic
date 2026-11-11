@@ -35,6 +35,15 @@ describe('StorageService', () => {
     expect(store.settings()).toEqual({ ambientMode: 'low', volume: 80 });
   });
 
+  it('guarda la foto del perfil y sigue leyendo perfiles antiguos sin ella', () => {
+    const store = new StorageService();
+    store.saveProfile({ name: 'Delia', ear: 'left', avatar: 'avatar-1.jpg' });
+    expect(new StorageService().profile()?.avatar).toBe('avatar-1.jpg');
+
+    localStorage.setItem('oido.profile', JSON.stringify({ name: 'Ana', ear: 'right' }));
+    expect(new StorageService().profile()).toEqual({ name: 'Ana', ear: 'right' });
+  });
+
   it('reset deja la app como recién instalada', () => {
     const store = new StorageService();
     store.saveProfile({ name: 'Delia', ear: 'right' });
