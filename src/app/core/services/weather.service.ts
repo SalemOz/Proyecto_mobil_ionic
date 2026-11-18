@@ -3,9 +3,10 @@ import { Injectable, inject } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { firstValueFrom, timeout } from 'rxjs';
-import { AmbientMode, Weather } from '../models';
+import { AmbientMode, Weather } from '@core/models';
+import { environment } from '@env/environment';
 
-const API_URL = 'https://api.open-meteo.com/v1/forecast';
+const API_URL = environment.api.weather;
 // Neiva, Huila: se usa si el usuario no da permiso de ubicación.
 const DEFAULT_PLACE = { lat: 2.9273, lon: -75.2819 };
 

@@ -10,9 +10,9 @@ import {
   lockClosedOutline,
   personCircleOutline,
 } from 'ionicons/icons';
-import { Ear } from '../../models';
-import { StorageService } from '../../services/storage.service';
-import { nameErrorMessage, nameValidator } from '../../validators';
+import { Ear } from '@core/models';
+import { StorageService } from '@core/services/storage.service';
+import { nameErrorMessage, nameValidator } from '@shared/validators/name.validator';
 
 @Component({
   selector: 'app-onboarding',

@@ -1,0 +1,36 @@
+/*
+  Tema de Oído+ — paleta calmada, inspirada en apps de salud y bienestar:
+  verde azulado (confianza), menta (calma), fondos suaves y tarjetas muy redondeadas.
+  Solo modo claro. Para cambiar la identidad de la app, edita estas variables.
+*/
+:root {
+  --ion-color-primary: #1f7a8c;
+  --ion-color-primary-rgb: 31, 122, 140;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #1b6b7b;
+  --ion-color-primary-tint: #358798;
+
+  --ion-color-success: #2e9e83;
+  --ion-color-success-rgb: 46, 158, 131;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #298b73;
+  --ion-color-success-tint: #43a88f;
+
+  --ion-color-danger: #c0333d;
+  --ion-color-danger-rgb: 192, 51, 61;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #a92d36;
+  --ion-color-danger-tint: #c64750;
+
+  --ion-background-color: #f3f9f9;
+  --ion-text-color: #16384a;
+
+  --oido-muted: #4a6573;
+  --oido-outline: #d3e6e8;
+  --oido-soft: #e2f3f2;
+  --oido-mint: #7fd1c0;
+  --oido-shadow: 0 8px 24px rgba(31, 122, 140, 0.12);
+}

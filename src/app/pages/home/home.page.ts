@@ -42,16 +42,16 @@ import {
   volumeLowOutline,
   waterOutline,
 } from 'ionicons/icons';
-import { AmbientMode, EAR_LABEL, MODE_LABEL } from '../../models';
-import { AUDIO_ERROR_TEXT, AudioError, AudioService } from '../../services/audio.service';
-import { StorageService } from '../../services/storage.service';
-import { UiService } from '../../services/ui.service';
+import { AmbientMode, EAR_LABEL, MODE_LABEL } from '@core/models';
+import { AUDIO_ERROR_TEXT, AudioError, AudioService } from '@core/services/audio.service';
+import { StorageService } from '@core/services/storage.service';
+import { UiService } from '@core/services/ui.service';
 import {
   WeatherResult,
   WeatherService,
   describeWeather,
   suggestMode,
-} from '../../services/weather.service';
+} from '@core/services/weather.service';
 
 const MODE_HINT: Record<AmbientMode, string> = {
   low: 'Escuchas lo esencial, sin saturar tu oído.',

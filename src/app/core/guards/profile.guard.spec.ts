@@ -2,8 +2,8 @@ import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { afterEach, describe, expect, it } from 'vitest';
-import { onboardingGuard, profileGuard } from './guards';
-import { StorageService } from './services/storage.service';
+import { onboardingGuard, profileGuard } from './profile.guard';
+import { StorageService } from '@core/services/storage.service';
 
 /** Router mínimo para las pruebas: solo interesa a qué ruta se redirige. */
 const routerStub = { createUrlTree: (commands: string[]) => ({ commands }) };

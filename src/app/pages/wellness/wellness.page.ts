@@ -10,7 +10,7 @@ import {
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { informationCircleOutline, leafOutline, openOutline, refreshOutline } from 'ionicons/icons';
-import { HealthService, HealthTopic } from '../../services/health.service';
+import { HealthService, HealthTopic } from '@core/services/health.service';
 
 const TOPICS = [
   'Pérdida de audición',

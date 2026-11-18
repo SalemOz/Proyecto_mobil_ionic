@@ -3,9 +3,9 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { IonButton, IonContent, IonIcon, IonItem, IonLabel, IonList } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { micOutline, timeOutline, trashOutline } from 'ionicons/icons';
-import { EAR_LABEL, MODE_LABEL } from '../../models';
-import { StorageService } from '../../services/storage.service';
-import { UiService } from '../../services/ui.service';
+import { EAR_LABEL, MODE_LABEL } from '@core/models';
+import { StorageService } from '@core/services/storage.service';
+import { UiService } from '@core/services/ui.service';
 
 @Component({
   selector: 'app-history',
