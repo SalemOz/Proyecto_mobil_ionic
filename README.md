@@ -200,3 +200,4 @@ queda en el almacenamiento privado de Oído+.
 | Tercer corte (Ionic + Angular) | `IonCard`, `IonList`, formularios reactivos validados, `HttpClient` a Open-Meteo |
 | Avance (Capacitor) | Sincronización con Android Studio + uso funcional de **GPS** (`@capacitor/geolocation`) |
 | Evaluación final | App funcionando, código fuente completo y APK instalado en un teléfono real |
+
