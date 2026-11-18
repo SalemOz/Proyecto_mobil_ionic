@@ -25,7 +25,6 @@ const TOPICS = [
   imports: [IonContent, IonCard, IonCardContent, IonIcon, IonButton, IonSearchbar, IonSkeletonText],
   templateUrl: './wellness.page.html',
   styleUrl: './wellness.page.scss',
-  // Resultados, estado y temas abiertos son signals: la vista solo se revisa cuando cambian.
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WellnessPage implements OnInit {

@@ -6,7 +6,6 @@ body {
   color: var(--ion-text-color);
 }
 
-/* Fondo de todas las pantallas: degradado suave que baja desde arriba */
 ion-content {
   --background: linear-gradient(180deg, #d9eeef 0%, #f3f9f9 360px);
 }
@@ -38,7 +37,6 @@ p {
   gap: 12px;
 }
 
-/* Tarjetas */
 ion-card {
   --color: var(--ion-text-color);
   margin: 14px 16px;
@@ -50,7 +48,6 @@ ion-card-content {
   padding: 18px;
 }
 
-/* Encabezado de tarjeta: ícono en cuadro suave + título */
 .card-head {
   display: flex;
   align-items: center;
@@ -71,7 +68,6 @@ ion-card-content {
   }
 }
 
-/* Componentes de Ionic */
 ion-chip {
   --background: var(--oido-soft);
   --color: var(--ion-color-primary-shade);
@@ -116,7 +112,6 @@ ion-tab-button {
   }
 }
 
-/* Texto solo para lectores de pantalla */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -126,7 +121,6 @@ ion-tab-button {
   white-space: nowrap;
 }
 
-/* Esqueletos de carga: tres líneas de ancho distinto */
 .skeleton ion-skeleton-text {
   height: 14px;
   margin: 0 0 10px;

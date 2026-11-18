@@ -81,7 +81,6 @@ export class SettingsPage {
       refreshOutline,
       personOutline,
     });
-    // Carga el perfil guardado en el formulario cada vez que cambia.
     effect(() => {
       const profile = this.profile();
       if (!profile) return;
@@ -104,7 +103,6 @@ export class SettingsPage {
     if (value === 'left' || value === 'right') this.form.controls.ear.setValue(value);
   }
 
-  /** Menú con las acciones de la foto: cámara, galería y eliminar (si ya hay una). */
   protected async changeAvatar(): Promise<void> {
     if (this.photoBusy()) return;
     const buttons: ActionSheetButton[] = [
@@ -123,7 +121,6 @@ export class SettingsPage {
         },
       },
     ];
-    // Solo se ofrece eliminar cuando el perfil ya tiene una foto guardada.
     if (this.profile()?.avatar) {
       buttons.push({
         text: 'Eliminar foto',
@@ -142,7 +139,7 @@ export class SettingsPage {
 
   /** Quita la foto sin cerrar sesión: conserva el perfil, los ajustes y el historial. */
   private async deletePhoto(): Promise<void> {
-    if (!(await this.ui.confirmRemovePhoto())) return; // el usuario canceló
+    if (!(await this.ui.confirmRemovePhoto())) return;
     if (await this.camera.removePhoto()) {
       await this.ui.toast('Foto eliminada');
     } else {
@@ -199,7 +196,7 @@ export class SettingsPage {
   }
 
   protected async confirmReset(): Promise<void> {
-    if (!(await this.ui.confirmLogout())) return; // el usuario canceló: no se borra nada
+    if (!(await this.ui.confirmLogout())) return;
     await this.audio.stop();
     await this.camera.removePhoto(); // borra el archivo antes de limpiar el perfil
     this.store.reset();

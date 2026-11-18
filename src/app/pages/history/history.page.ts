@@ -12,7 +12,6 @@ import { UiService } from '@core/services/ui.service';
   imports: [DatePipe, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton],
   templateUrl: './history.page.html',
   styleUrl: './history.page.scss',
-  // La lista y los totales salen de signals: la vista solo se revisa cuando cambian.
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HistoryPage {

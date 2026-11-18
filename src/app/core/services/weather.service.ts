@@ -29,7 +29,6 @@ export interface ModeSuggestion {
   reason: string;
 }
 
-/** Texto e ícono para cada código de clima WMO. */
 export function describeWeather(code: number): { text: string; icon: string } {
   if (code === 0) return { text: 'Despejado', icon: 'sunny-outline' };
   if (code <= 2) return { text: 'Parcialmente nublado', icon: 'partly-sunny-outline' };

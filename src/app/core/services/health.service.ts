@@ -12,7 +12,6 @@ export interface HealthTopic {
   url: string;
 }
 
-/** Quita las etiquetas HTML y conserva los párrafos como saltos de línea. */
 function htmlToText(raw: string, keepParagraphs = false): string {
   const withBreaks = keepParagraphs
     ? raw.replace(/<\/p>\s*/gi, '\n\n').replace(/<br\s*\/?>/gi, '\n')
@@ -34,7 +33,6 @@ function isMedlinePlusUrl(url: string): boolean {
   }
 }
 
-/** Convierte el XML de MedlinePlus (rettype=brief) en una lista de temas de salud. */
 export function parseTopics(xml: string): HealthTopic[] {
   const doc = new DOMParser().parseFromString(xml, 'text/xml');
   if (doc.querySelector('parsererror')) return [];

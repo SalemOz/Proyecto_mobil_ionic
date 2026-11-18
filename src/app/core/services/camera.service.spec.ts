@@ -35,7 +35,7 @@ describe('CameraService', () => {
 
   it('guarda la foto en Directory.Data y actualiza el perfil', async () => {
     camera.takePhoto.mockResolvedValue({ type: 0, uri: 'file:///cache/foto.jpg', saved: false });
-    files.readFile.mockResolvedValueOnce({ data: 'Zm90bw==' }); // lectura de la foto temporal
+    files.readFile.mockResolvedValueOnce({ data: 'Zm90bw==' });
 
     await expect(service.takePhoto()).resolves.toBe('saved');
 
