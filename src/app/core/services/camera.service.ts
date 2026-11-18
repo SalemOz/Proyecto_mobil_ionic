@@ -5,10 +5,8 @@ import { Capacitor } from '@capacitor/core';
 import { Directory, Filesystem } from '@capacitor/filesystem';
 import { StorageService } from './storage.service';
 
-/** Origen de la foto que elige el usuario en el menú de Ajustes. */
 export type AvatarSource = 'camera' | 'gallery';
 
-/** Resultado de intentar cambiar la foto: la página decide qué aviso mostrar. */
 export type AvatarUpdate = 'saved' | 'cancelled' | 'denied' | 'failed';
 
 // Los plugins de Capacitor se inyectan para poder probar el servicio con TestBed.
@@ -61,9 +59,7 @@ export class CameraService {
   private readonly busyState = signal(false);
   private resolveId = 0;
 
-  /** URL lista para mostrar la foto; `null` si el perfil no tiene foto. */
   readonly avatarUrl = this.avatarUrlState.asReadonly();
-  /** `true` mientras se obtiene y guarda la foto (la página muestra la carga). */
   readonly busy = this.busyState.asReadonly();
 
   constructor() {
@@ -74,7 +70,6 @@ export class CameraService {
     });
   }
 
-  /** Toma una fotografía con la cámara del teléfono. */
   async takePhoto(): Promise<AvatarUpdate> {
     return this.update(() =>
       this.camera.takePhoto({
@@ -85,7 +80,6 @@ export class CameraService {
     );
   }
 
-  /** Elige una imagen existente de la galería. */
   async chooseFromGallery(): Promise<AvatarUpdate> {
     return this.update(async () => {
       const { results } = await this.camera.chooseFromGallery({
@@ -104,7 +98,7 @@ export class CameraService {
   async removePhoto(): Promise<boolean> {
     const profile = this.store.profile();
     const reference = profile?.avatar;
-    if (!profile || !reference) return true; // sin foto no hay nada que borrar
+    if (!profile || !reference) return true;
     try {
       this.store.saveProfile({ name: profile.name, ear: profile.ear });
       await this.deleteFile(reference);
@@ -116,7 +110,7 @@ export class CameraService {
 
   private async update(pick: () => Promise<MediaResult | undefined>): Promise<AvatarUpdate> {
     const profile = this.store.profile();
-    if (!profile) return 'failed'; // sin perfil no hay dónde guardar la foto
+    if (!profile) return 'failed';
     const previous = profile.avatar;
 
     this.busyState.set(true);
@@ -170,7 +164,6 @@ export class CameraService {
     });
   }
 
-  /** Convierte el nombre guardado en una URL que el WebView pueda mostrar. */
   private async resolve(reference: string | null): Promise<void> {
     const id = ++this.resolveId;
     if (!reference) {

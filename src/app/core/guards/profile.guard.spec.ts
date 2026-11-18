@@ -5,7 +5,6 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { onboardingGuard, profileGuard } from './profile.guard';
 import { StorageService } from '@core/services/storage.service';
 
-/** Router mínimo para las pruebas: solo interesa a qué ruta se redirige. */
 const routerStub = { createUrlTree: (commands: string[]) => ({ commands }) };
 
 /**
@@ -24,7 +23,6 @@ function setup(hasProfile: boolean): void {
   });
 }
 
-/** Ejecuta un guard con las dependencias ya preparadas y devuelve su resultado. */
 function runGuard(guard: typeof profileGuard): unknown {
   return TestBed.runInInjectionContext(() => guard({} as never, {} as never));
 }

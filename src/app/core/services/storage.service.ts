@@ -27,7 +27,7 @@ export class StorageService {
   }
 
   addSession(session: Session): void {
-    const next = [session, ...this.sessions()].slice(0, MAX_SESSIONS); // la más reciente primero
+    const next = [session, ...this.sessions()].slice(0, MAX_SESSIONS);
     this.sessions.set(next);
     this.write(KEYS.sessions, next);
   }
@@ -37,7 +37,6 @@ export class StorageService {
     this.write(KEYS.sessions, []);
   }
 
-  /** Borra todo y vuelve al estado inicial (como recién instalada). */
   reset(): void {
     Object.values(KEYS).forEach((key) => this.remove(key));
     this.profile.set(null);

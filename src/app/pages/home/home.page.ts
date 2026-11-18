@@ -77,7 +77,6 @@ const MODE_HINT: Record<AmbientMode, string> = {
   ],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',
-  // Todo lo que se muestra sale de signals: la vista solo se revisa cuando alguno cambia.
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePage implements OnInit {
@@ -95,7 +94,6 @@ export class HomePage implements OnInit {
   protected readonly modeHint = computed(() => MODE_HINT[this.mode()]);
   protected readonly earName = computed(() => EAR_LABEL[this.profile()?.ear ?? 'right']);
 
-  /** Saludo según la hora del día. */
   protected readonly greeting = computed(() => {
     const hour = new Date().getHours();
     return hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
@@ -146,7 +144,6 @@ export class HomePage implements OnInit {
     void this.loadWeather();
   }
 
-  /** Botón grande: enciende o apaga la amplificación. */
   protected async toggleAmplification(): Promise<void> {
     const profile = this.profile();
     if (!profile || this.busy()) return;

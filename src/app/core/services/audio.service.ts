@@ -33,7 +33,6 @@ export class AudioService {
   private readonly store = inject(StorageService);
   private readonly zone = inject(NgZone);
 
-  /** true mientras el micrófono está capturando y reenviando sonido. */
   readonly active = signal(false);
   /** Nivel de entrada 0..1, para el indicador visual. */
   readonly level = signal(0);
@@ -107,7 +106,7 @@ export class AudioService {
       this.active.set(true);
       this.startMeter(analyser);
       try {
-        await KeepAwake.keepAwake(); // mantiene la pantalla encendida mientras amplifica
+        await KeepAwake.keepAwake();
       } catch {
         /* no disponible: no es crítico */
       }

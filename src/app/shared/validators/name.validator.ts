@@ -20,7 +20,6 @@ const NAME_MESSAGES: Record<string, string> = {
   reserved: 'Ese nombre no está permitido. Usa tu nombre real.',
 };
 
-/** Devuelve el mensaje de error del campo nombre (o '' si no hay error o aún no lo tocan). */
 export function nameErrorMessage(control: AbstractControl): string {
   if (!control.errors || !(control.touched || control.dirty)) return '';
   const key = Object.keys(control.errors)[0];

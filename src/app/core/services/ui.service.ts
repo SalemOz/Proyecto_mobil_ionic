@@ -4,10 +4,6 @@ import { StorageService } from './storage.service';
 
 /**
  * Centraliza los avisos y diálogos de la app (toasts y alertas).
- *
- * Antes cada página creaba los suyos y el mismo AlertController.create con el título
- * "Borrar historial" estaba copiado en Historial y en Ajustes. Aquí queda una sola versión,
- * con el mismo estilo (`cssClass: 'oido-alert'`) y los mismos textos en toda la app.
  */
 @Injectable({ providedIn: 'root' })
 export class UiService {
@@ -15,7 +11,6 @@ export class UiService {
   private readonly toastController = inject(ToastController);
   private readonly store = inject(StorageService);
 
-  /** Pide confirmación y borra todo el historial. La usan Historial y Ajustes. */
   async confirmClearHistory(): Promise<void> {
     const alert = await this.alertController.create({
       header: 'Borrar historial',
@@ -29,7 +24,6 @@ export class UiService {
     await alert.present();
   }
 
-  /** Aviso breve en pantalla (2 s y arriba por defecto). */
   async toast(
     message: string,
     duration = 2000,
@@ -39,7 +33,6 @@ export class UiService {
     await toast.present();
   }
 
-  /** Alerta informativa con un único botón «Entendido». */
   async alert(header: string, message: string): Promise<void> {
     const alert = await this.alertController.create({
       header,
@@ -50,7 +43,6 @@ export class UiService {
     await alert.present();
   }
 
-  /** Confirmación de «Eliminar foto». Devuelve true solo si el usuario confirma. */
   async confirmRemovePhoto(): Promise<boolean> {
     const alert = await this.alertController.create({
       header: 'Eliminar foto',
