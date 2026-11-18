@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CapacitorHttp } from '@capacitor/core';
+import { environment } from '@env/environment';
 
-const API_URL = 'https://wsearch.nlm.nih.gov/ws/query';
+const API_URL = environment.api.health;
 const CACHE_PREFIX = 'oido.health.';
 const CACHE_HOURS = 24; // MedlinePlus pide guardar los resultados entre 12 y 24 horas
 

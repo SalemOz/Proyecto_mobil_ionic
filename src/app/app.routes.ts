@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { onboardingGuard, profileGuard } from './guards';
+import { onboardingGuard, profileGuard } from '@core/guards/profile.guard';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'tabs/home' },

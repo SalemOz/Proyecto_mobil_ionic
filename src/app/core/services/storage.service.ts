@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { AmbientMode, Profile, Session, Settings } from '../models';
+import { AmbientMode, Profile, Session, Settings } from '@core/models';
 
 const KEYS = { profile: 'oido.profile', settings: 'oido.settings', sessions: 'oido.sessions' };
 const MAX_SESSIONS = 100;

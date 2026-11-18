@@ -38,7 +38,7 @@ micrófono → ganancia (volumen × modo) → limitador → panorama (todo al o�
 - Mientras amplifica, `@capacitor-community/keep-awake` mantiene la pantalla encendida.
 - Cada vez que se detiene, se guarda una sesión en el historial.
 
-Código: `src/app/services/audio.service.ts`.
+Código: `src/app/core/services/audio.service.ts`.
 
 ## 3. API pública y GPS
 
@@ -46,27 +46,43 @@ Código: `src/app/services/audio.service.ts`.
   `GET https://api.open-meteo.com/v1/forecast?latitude=..&longitude=..&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m`
 - **GPS (plugin de Capacitor):** `@capacitor/geolocation` obtiene la ubicación para consultar el clima.
   Si el usuario no da permiso, se usa Neiva por defecto.
-- **Información de salud (MedlinePlus):** la pestaña *Bienestar* consulta la API pública de MedlinePlus (Biblioteca Nacional de Medicina de EE. UU., sin clave) con `db=healthTopicsSpanish`. Responde en XML, que se convierte a texto en `parseTopics()`. Los resultados se guardan 24 h (lo pide la política de uso) y se indica la fuente. Código: `src/app/services/health.service.ts`.
+- **Información de salud (MedlinePlus):** la pestaña *Bienestar* consulta la API pública de MedlinePlus (Biblioteca Nacional de Medicina de EE. UU., sin clave) con `db=healthTopicsSpanish`. Responde en XML, que se convierte a texto en `parseTopics()`. Los resultados se guardan 24 h (lo pide la política de uso) y se indica la fuente. Código: `src/app/core/services/health.service.ts`.
 - **Sugerencia automática:** con lluvia, tormenta o viento fuerte, la app sugiere el modo **Alto**
   (esos ruidos tapan los sonidos del entorno); con clima despejado sugiere **Bajo**.
 
-Código: `src/app/services/weather.service.ts`.
+Código: `src/app/core/services/weather.service.ts`.
 
 ## 4. Estructura
 
 ```
-src/app/
-├── app.ts / app.config.ts / app.routes.ts   # arranque, proveedores y rutas
-├── guards.ts                                # formulario solo la primera vez
-├── models.ts                                # tipos: Profile, Session, Weather...
-├── validators.ts                            # validación del nombre
-├── services/
-│   ├── storage.service.ts                   # perfil, ajustes e historial (almacenamiento local)
-│   ├── camera.service.ts                    # foto de perfil (Camera + Filesystem)
-│   ├── audio.service.ts                     # motor de audio (Web Audio)
-│   ├── weather.service.ts                   # GPS + Open-Meteo
-│   └── health.service.ts                    # MedlinePlus (información de salud)
-└── pages/ onboarding · tabs · home · wellness · history · settings   # .ts / .html / .scss
+src/
+├── app/
+│   ├── app.ts / app.config.ts / app.routes.ts   # arranque, proveedores y rutas
+│   ├── core/
+│   │   ├── guards/
+│   │   │   └── profile.guard.ts                 # formulario solo la primera vez
+│   │   ├── models/
+│   │   │   ├── profile.model.ts                 # Ear, Profile, EAR_LABEL
+│   │   │   ├── settings.model.ts                # AmbientMode, Settings, MODE_LABEL
+│   │   │   ├── session.model.ts                 # Session
+│   │   │   ├── weather.model.ts                 # Weather
+│   │   │   └── index.ts                         # exporta todos los modelos
+│   │   └── services/
+│   │       ├── storage.service.ts               # perfil, ajustes e historial (almacenamiento local)
+│   │       ├── camera.service.ts                # foto de perfil (Camera + Filesystem)
+│   │       ├── audio.service.ts                 # motor de audio (Web Audio)
+│   │       ├── ui.service.ts                    # avisos y diálogos (toasts y alertas)
+│   │       ├── weather.service.ts               # GPS + Open-Meteo
+│   │       └── health.service.ts                # MedlinePlus (información de salud)
+│   ├── shared/
+│   │   └── validators/
+│   │       └── name.validator.ts                # validación del nombre
+│   └── pages/ onboarding · tabs · home · wellness · history · settings   # .ts / .html / .scss
+├── environments/
+│   └── environment.ts                           # URL de las API públicas
+├── theme/
+│   └── variables.scss                           # colores del tema
+└── styles.scss                                  # estilos globales
 scripts/android-setup.mjs                    # agrega permisos al AndroidManifest
 capacitor.config.ts                          # appId co.edu.usco.oidoplus, webDir www
 ```
@@ -91,7 +107,7 @@ ruta temporal de la caché, así que se copia a `Directory.Data`, el almacenamie
 Se guarda una sola foto (`avatar-<marca de tiempo>.jpg`), se borra la anterior al reemplazarla y al
 cerrar sesión. Para mostrarla se obtiene la ruta con `Filesystem.getUri()` y se convierte con
 `Capacitor.convertFileSrc()`, de modo que sigue disponible después de cerrar y abrir la app.
-- **Servicio:** `src/app/services/camera.service.ts` (`CameraService`). Expone `avatarUrl` y `busy`
+- **Servicio:** `src/app/core/services/camera.service.ts` (`CameraService`). Expone `avatarUrl` y `busy`
 como signals. `SettingsPage` solo abre el menú, actualiza el avatar y muestra los avisos
 (permiso denegado o error) mediante `UiService`; ninguna página habla directo con los plugins.
 - **Funcionamiento del avatar:** se toca el círculo de Ajustes → Tomar una foto / Elegir de la galería.

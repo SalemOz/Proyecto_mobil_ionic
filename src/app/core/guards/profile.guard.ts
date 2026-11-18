@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { StorageService } from './services/storage.service';
+import { StorageService } from '@core/services/storage.service';
 
 /** Las pantallas principales exigen que el usuario ya haya llenado el formulario inicial. */
 export const profileGuard: CanActivateFn = () =>

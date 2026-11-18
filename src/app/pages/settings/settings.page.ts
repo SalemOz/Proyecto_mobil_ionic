@@ -25,12 +25,12 @@ import {
   refreshOutline,
   trashOutline,
 } from 'ionicons/icons';
-import { EAR_LABEL, Ear } from '../../models';
-import { AudioService } from '../../services/audio.service';
-import { AvatarSource, CameraService } from '../../services/camera.service';
-import { StorageService } from '../../services/storage.service';
-import { UiService } from '../../services/ui.service';
-import { nameErrorMessage, nameValidator } from '../../validators';
+import { EAR_LABEL, Ear } from '@core/models';
+import { AudioService } from '@core/services/audio.service';
+import { AvatarSource, CameraService } from '@core/services/camera.service';
+import { StorageService } from '@core/services/storage.service';
+import { UiService } from '@core/services/ui.service';
+import { nameErrorMessage, nameValidator } from '@shared/validators/name.validator';
 
 @Component({
   selector: 'app-settings',

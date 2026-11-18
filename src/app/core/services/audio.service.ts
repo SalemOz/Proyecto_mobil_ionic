@@ -1,6 +1,6 @@
 import { Injectable, NgZone, inject, signal } from '@angular/core';
 import { KeepAwake } from '@capacitor-community/keep-awake';
-import { AmbientMode, Ear } from '../models';
+import { AmbientMode, Ear } from '@core/models';
 import { StorageService } from './storage.service';
 
 export type AudioErrorCode = 'denied' | 'no-mic' | 'unsupported' | 'unknown';

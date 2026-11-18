@@ -1,6 +1,6 @@
 import { FormControl } from '@angular/forms';
 import { describe, expect, it } from 'vitest';
-import { nameValidator } from './validators';
+import { nameValidator } from './name.validator';
 
 const check = (value: string) => nameValidator(new FormControl(value));
 
