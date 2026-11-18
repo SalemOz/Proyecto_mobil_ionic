@@ -18,25 +18,15 @@ export const AUDIO_ERROR_TEXT: Record<AudioErrorCode, string> = {
   unknown: 'No se pudo iniciar la amplificación. Inténtalo de nuevo.',
 };
 
-/** Cuánto se refuerza el sonido según el modo de ambiente (mayor = más conciencia del entorno). */
 const MODE_BOOST: Record<AmbientMode, number> = { low: 1.5, medium: 3, high: 5 };
 
-/**
- * Motor de audio de Oído+ (Web Audio API).
- *
- *  micrófono → ganancia (volumen x modo) → limitador → panorama (todo al oído sano) → audífonos
- *
- * Si el oído afectado es el izquierdo, todo el sonido sale por el canal derecho (pan = +1) y viceversa.
- */
 @Injectable({ providedIn: 'root' })
 export class AudioService {
   private readonly store = inject(StorageService);
   private readonly zone = inject(NgZone);
 
   readonly active = signal(false);
-  /** Nivel de entrada 0..1, para el indicador visual. */
   readonly level = signal(0);
-  /** Nombre del micrófono que el sistema está usando (sirve para saber si es el del teléfono o el del audífono). */
   readonly inputLabel = signal('');
 
   private ctx?: AudioContext;
@@ -61,10 +51,8 @@ export class AudioService {
     this.volume = volume;
     this.mode = mode;
 
-    // El contexto se crea de inmediato (dentro del gesto del usuario) para que no quede suspendido.
     const ctx = new AudioContext({ latencyHint: 'interactive' });
     try {
-      // Sin cancelación de eco, supresión de ruido ni control automático: queremos el sonido del entorno tal cual.
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: false,
@@ -77,7 +65,7 @@ export class AudioService {
 
       const source = ctx.createMediaStreamSource(stream);
       const gain = ctx.createGain();
-      const limiter = ctx.createDynamicsCompressor(); // evita picos fuertes que lastimen el oído
+      const limiter = ctx.createDynamicsCompressor();
       limiter.threshold.value = -12;
       limiter.knee.value = 6;
       limiter.ratio.value = 12;
@@ -96,7 +84,6 @@ export class AudioService {
       this.panner = panner;
       this.applyParams(true);
 
-      // Si el micrófono se corta (llamada, otra app), se detiene limpiamente.
       stream
         .getAudioTracks()[0]
         ?.addEventListener('ended', () => this.zone.run(() => void this.stop()));
@@ -107,9 +94,7 @@ export class AudioService {
       this.startMeter(analyser);
       try {
         await KeepAwake.keepAwake();
-      } catch {
-        /* no disponible: no es crítico */
-      }
+      } catch {}
     } catch (error) {
       void ctx.close();
       throw this.toAudioError(error);
@@ -140,9 +125,7 @@ export class AudioService {
     this.inputLabel.set('');
     try {
       await KeepAwake.allowSleep();
-    } catch {
-      /* sin acción */
-    }
+    } catch {}
   }
 
   setVolume(volume: number): void {
@@ -160,11 +143,10 @@ export class AudioService {
     this.applyParams();
   }
 
-  /** Aplica volumen, modo y oído a los nodos de audio (con una transición corta para evitar chasquidos). */
   private applyParams(immediate = false): void {
     if (!this.ctx || !this.gainNode || !this.panner) return;
     const gain = Math.pow(this.volume / 100, 2) * MODE_BOOST[this.mode];
-    const pan = this.ear === 'left' ? 1 : -1; // oído afectado izquierdo → sonido al canal derecho
+    const pan = this.ear === 'left' ? 1 : -1;
     const now = this.ctx.currentTime;
     if (immediate) {
       this.gainNode.gain.value = gain;
@@ -179,7 +161,6 @@ export class AudioService {
     const samples = new Uint8Array(analyser.fftSize);
     this.zone.runOutsideAngular(() => {
       this.meterTimer = window.setInterval(() => {
-        // Con la app en segundo plano no hay nada que dibujar: se evita el cálculo y el redibujado.
         if (document.hidden) return;
         analyser.getByteTimeDomainData(samples);
         let sum = 0;
@@ -187,8 +168,6 @@ export class AudioService {
           const x = (value - 128) / 128;
           sum += x * x;
         }
-        // Se redondea a 2 decimales y se avisa solo con cambios de 0.02 o más: el medidor se ve
-        // igual, pero la vista se redibuja muchas menos veces por segundo.
         const next = Math.round(Math.min(1, Math.sqrt(sum / samples.length) * 4) * 100) / 100;
         if (Math.abs(next - this.level()) < 0.02) return;
         this.level.set(next);

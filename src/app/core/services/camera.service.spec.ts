@@ -47,7 +47,7 @@ describe('CameraService', () => {
     });
     expect(store.profile()?.avatar).toMatch(/^avatar-\d+\.jpg$/);
 
-    TestBed.tick(); // ejecuta el effect que resuelve la URL del avatar
+    TestBed.tick();
     await vi.waitFor(() => expect(service.avatarUrl()).toBe('data:image/jpeg;base64,aW1hZ2Vu'));
   });
 

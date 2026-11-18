@@ -85,7 +85,7 @@ export class SettingsPage {
       const profile = this.profile();
       if (!profile) return;
       const identity = `${profile.name}|${profile.ear}`;
-      if (identity === this.syncedProfile) return; // solo cambió la foto: no se toca el formulario
+      if (identity === this.syncedProfile) return;
       this.syncedProfile = identity;
       this.form.reset({ name: profile.name, ear: profile.ear });
     });
@@ -137,7 +137,6 @@ export class SettingsPage {
     await sheet.present();
   }
 
-  /** Quita la foto sin cerrar sesión: conserva el perfil, los ajustes y el historial. */
   private async deletePhoto(): Promise<void> {
     if (!(await this.ui.confirmRemovePhoto())) return;
     if (await this.camera.removePhoto()) {
@@ -153,7 +152,7 @@ export class SettingsPage {
   private async pickPhoto(source: AvatarSource): Promise<void> {
     const result =
       source === 'camera' ? await this.camera.takePhoto() : await this.camera.chooseFromGallery();
-    if (result === 'cancelled') return; // se conserva la foto anterior
+    if (result === 'cancelled') return;
     if (result === 'denied') {
       await this.ui.alert(
         'Permiso necesario',
@@ -171,9 +170,9 @@ export class SettingsPage {
     this.form.markAllAsTouched();
     if (this.form.invalid) return;
     const { name, ear } = this.form.getRawValue();
-    const avatar = this.profile()?.avatar; // la foto no se pierde al guardar el formulario
+    const avatar = this.profile()?.avatar;
     this.store.saveProfile({ name: name.trim(), ear, ...(avatar ? { avatar } : {}) });
-    this.audio.setEar(ear); // si está amplificando, el cambio se aplica en vivo
+    this.audio.setEar(ear);
     await this.ui.toast('Cambios guardados');
   }
 
@@ -198,7 +197,7 @@ export class SettingsPage {
   protected async confirmReset(): Promise<void> {
     if (!(await this.ui.confirmLogout())) return;
     await this.audio.stop();
-    await this.camera.removePhoto(); // borra el archivo antes de limpiar el perfil
+    await this.camera.removePhoto();
     this.store.reset();
     await this.router.navigateByUrl('/onboarding', { replaceUrl: true });
   }

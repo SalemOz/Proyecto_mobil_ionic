@@ -9,7 +9,6 @@ export type AvatarSource = 'camera' | 'gallery';
 
 export type AvatarUpdate = 'saved' | 'cancelled' | 'denied' | 'failed';
 
-// Los plugins de Capacitor se inyectan para poder probar el servicio con TestBed.
 type CameraPlugin = Pick<typeof Camera, 'takePhoto' | 'chooseFromGallery'>;
 type FilesystemPlugin = Pick<typeof Filesystem, 'readFile' | 'writeFile' | 'getUri' | 'deleteFile'>;
 
@@ -26,7 +25,6 @@ const AVATAR_PREFIX = 'avatar';
 const AVATAR_EXTENSION = 'jpg';
 const PHOTO_QUALITY = 85;
 
-// Códigos del plugin Camera (8.2+) que no son fallos reales: el usuario canceló o negó el permiso.
 const CANCELLED_CODES: string[] = [
   CameraErrorCode.TakePhotoCancelled,
   CameraErrorCode.ChooseMediaCancelled,
@@ -42,14 +40,6 @@ function errorCode(error: unknown): string | undefined {
   return typeof code === 'string' ? code : undefined;
 }
 
-/**
- * Cambia y conserva la foto de perfil.
- *
- * Camera devuelve la foto en una ruta temporal (caché), así que aquí se copia a
- * `Directory.Data` (almacenamiento privado de la app) y en el perfil solo se guarda
- * el nombre del archivo. La URL para el `<img>` se obtiene con Filesystem + Capacitor,
- * de modo que sigue funcionando después de cerrar y abrir la app.
- */
 @Injectable({ providedIn: 'root' })
 export class CameraService {
   private readonly store = inject(StorageService);
@@ -63,7 +53,6 @@ export class CameraService {
   readonly busy = this.busyState.asReadonly();
 
   constructor() {
-    // Mantiene la foto sincronizada con el perfil: al guardarla, al editarla y al restablecerlo.
     effect(() => {
       const reference = this.store.profile()?.avatar ?? null;
       void this.resolve(reference);
@@ -91,10 +80,6 @@ export class CameraService {
     });
   }
 
-  /**
-   * Borra la foto del perfil y su archivo, sin tocar los demás datos.
-   * Devuelve `false` si no se pudo actualizar el perfil.
-   */
   async removePhoto(): Promise<boolean> {
     const profile = this.store.profile();
     const reference = profile?.avatar;
@@ -128,7 +113,6 @@ export class CameraService {
       });
 
       this.store.saveProfile({ ...profile, avatar: reference });
-      // El perfil ya apunta al archivo nuevo: el anterior se puede borrar sin perder nada.
       if (previous && previous !== reference) await this.deleteFile(previous);
       return 'saved';
     } catch (error) {
@@ -138,14 +122,12 @@ export class CameraService {
     }
   }
 
-  /** Copia la foto temporal de Camera a Base64, que es lo que Filesystem escribe en disco. */
   private async readBase64(media: MediaResult): Promise<string> {
     if (media.uri) {
       const { data } = await this.files.readFile({ path: media.uri });
       return typeof data === 'string' ? data : this.blobToBase64(data);
     }
     if (media.webPath) {
-      // En el navegador (desarrollo) la foto llega como blob, no como archivo nativo.
       const response = await fetch(media.webPath);
       return this.blobToBase64(await response.blob());
     }
@@ -174,7 +156,6 @@ export class CameraService {
       const url = await this.displayUrl(reference);
       if (id === this.resolveId) this.avatarUrlState.set(url);
     } catch {
-      // Archivo borrado o ilegible: el avatar vuelve a mostrar la inicial.
       if (id === this.resolveId) this.avatarUrlState.set(null);
     }
   }
@@ -182,7 +163,6 @@ export class CameraService {
   private async displayUrl(reference: string): Promise<string> {
     const { uri } = await this.files.getUri({ path: reference, directory: Directory.Data });
     if (Capacitor.isNativePlatform()) return Capacitor.convertFileSrc(uri);
-    // En el navegador no existe file://: se lee para mostrar (no se guarda en localStorage).
     const { data } = await this.files.readFile({ path: reference, directory: Directory.Data });
     return typeof data === 'string' ? `data:image/jpeg;base64,${data}` : URL.createObjectURL(data);
   }
@@ -190,9 +170,7 @@ export class CameraService {
   private async deleteFile(reference: string): Promise<void> {
     try {
       await this.files.deleteFile({ path: reference, directory: Directory.Data });
-    } catch {
-      /* el archivo ya no existe: no hay nada que borrar */
-    }
+    } catch {}
   }
 
   private classify(error: unknown): AvatarUpdate {

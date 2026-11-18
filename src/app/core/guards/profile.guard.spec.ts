@@ -7,10 +7,6 @@ import { StorageService } from '@core/services/storage.service';
 
 const routerStub = { createUrlTree: (commands: string[]) => ({ commands }) };
 
-/**
- * Prepara el entorno de inyección con un almacenamiento simulado.
- * Los guards usan inject(), así que hay que ejecutarlos dentro de un TestBed.
- */
 function setup(hasProfile: boolean): void {
   TestBed.configureTestingModule({
     providers: [

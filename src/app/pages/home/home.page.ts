@@ -99,11 +99,9 @@ export class HomePage implements OnInit {
     return hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
   });
 
-  /** Los esqueletos no se animan si el sistema pide reducir el movimiento. */
   protected readonly animateSkeleton = !window.matchMedia?.('(prefers-reduced-motion: reduce)')
     .matches;
 
-  /** true mientras se espera el permiso del micrófono, para evitar toques repetidos. */
   protected readonly busy = signal(false);
 
   protected readonly weatherState = signal<'loading' | 'ok' | 'error'>('loading');
@@ -164,13 +162,10 @@ export class HomePage implements OnInit {
     }
   }
 
-  /** Vibración corta al activar o desactivar con éxito; si no hay háptica (web), se ignora. */
   private async vibrate(): Promise<void> {
     try {
       await Haptics.impact({ style: ImpactStyle.Medium });
-    } catch {
-      // sin háptica disponible: no afecta a la amplificación
-    }
+    } catch {}
   }
 
   protected onVolume(value: unknown): void {

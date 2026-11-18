@@ -4,7 +4,7 @@ import { environment } from '@env/environment';
 
 const API_URL = environment.api.health;
 const CACHE_PREFIX = 'oido.health.';
-const CACHE_HOURS = 24; // MedlinePlus pide guardar los resultados entre 12 y 24 horas
+const CACHE_HOURS = 24;
 
 export interface HealthTopic {
   title: string;
@@ -23,7 +23,6 @@ function htmlToText(raw: string, keepParagraphs = false): string {
     .trim();
 }
 
-/** Solo se aceptan enlaces que apunten a MedlinePlus. */
 function isMedlinePlusUrl(url: string): boolean {
   try {
     const parsed = new URL(url);
@@ -44,7 +43,6 @@ export function parseTopics(xml: string): HealthTopic[] {
     let summary = '';
     node.querySelectorAll('content').forEach((content) => {
       const name = (content.getAttribute('name') ?? '').toLowerCase();
-      // El texto puede venir como HTML escapado o como elementos XML anidados.
       const raw = content.children.length ? content.innerHTML : (content.textContent ?? '');
       if (name === 'title') title = htmlToText(raw);
       else if (name === 'fullsummary') summary = htmlToText(raw, true);
@@ -54,10 +52,6 @@ export function parseTopics(xml: string): HealthTopic[] {
   return topics;
 }
 
-/**
- * Información de salud en español desde MedlinePlus (Biblioteca Nacional de Medicina de EE. UU.).
- * API pública y gratuita, sin clave. Responde en XML.
- */
 @Injectable({ providedIn: 'root' })
 export class HealthService {
   async search(term: string): Promise<HealthTopic[]> {
@@ -67,7 +61,6 @@ export class HealthService {
     const cached = this.readCache(clean);
     if (cached) return cached;
 
-    // CapacitorHttp hace la petición desde la capa nativa, así no depende de las reglas CORS del WebView.
     const response = await CapacitorHttp.get({
       url: API_URL,
       params: {
@@ -105,8 +98,6 @@ export class HealthService {
   private writeCache(term: string, topics: HealthTopic[]): void {
     try {
       localStorage.setItem(this.cacheKey(term), JSON.stringify({ savedAt: Date.now(), topics }));
-    } catch {
-      /* sin espacio: simplemente no se guarda en caché */
-    }
+    } catch {}
   }
 }

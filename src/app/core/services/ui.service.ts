@@ -2,9 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import { AlertController, ToastController, ToastOptions } from '@ionic/angular';
 import { StorageService } from './storage.service';
 
-/**
- * Centraliza los avisos y diálogos de la app (toasts y alertas).
- */
 @Injectable({ providedIn: 'root' })
 export class UiService {
   private readonly alertController = inject(AlertController);
@@ -59,11 +56,6 @@ export class UiService {
     return role === 'destructive';
   }
 
-  /**
-   * Confirmación de «Cerrar sesión». Devuelve true solo si el usuario confirma.
-   * La página sigue siendo dueña de la lógica (detener el audio, borrar datos y navegar),
-   * así este servicio no depende del router ni del motor de audio.
-   */
   async confirmLogout(): Promise<boolean> {
     const alert = await this.alertController.create({
       header: 'Cerrar sesión',

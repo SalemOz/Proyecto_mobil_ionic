@@ -5,7 +5,6 @@ const KEYS = { profile: 'oido.profile', settings: 'oido.settings', sessions: 'oi
 const MAX_SESSIONS = 100;
 const DEFAULT_SETTINGS: Settings = { ambientMode: 'low' as AmbientMode, volume: 60 };
 
-/** Guarda perfil, ajustes e historial en el almacenamiento local de la app (localStorage del WebView). */
 @Injectable({ providedIn: 'root' })
 export class StorageService {
   readonly profile = signal<Profile | null>(this.read<Profile | null>(KEYS.profile, null));
@@ -56,16 +55,12 @@ export class StorageService {
   private write(key: string, value: unknown): void {
     try {
       localStorage.setItem(key, JSON.stringify(value));
-    } catch {
-      /* almacenamiento lleno o no disponible: la app sigue funcionando en memoria */
-    }
+    } catch {}
   }
 
   private remove(key: string): void {
     try {
       localStorage.removeItem(key);
-    } catch {
-      /* sin acción */
-    }
+    } catch {}
   }
 }

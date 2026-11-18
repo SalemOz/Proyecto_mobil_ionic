@@ -1,5 +1,3 @@
-// Agrega al AndroidManifest los permisos que necesita Oído+ (micrófono, ubicación).
-// Uso (después de "npx cap add android"):  npm run android:setup
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
 const manifestPath = 'android/app/src/main/AndroidManifest.xml';

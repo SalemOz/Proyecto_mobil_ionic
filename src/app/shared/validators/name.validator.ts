@@ -1,14 +1,13 @@
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 
-// Solo letras (con tildes y ñ), espacios, guiones y apóstrofes; 2 a 50 caracteres.
 const NAME_REGEX = /^\p{L}[\p{L} '-]{1,49}$/u;
 const RESERVED_NAMES = ['admin', 'test', 'usuario', 'user', 'root', 'prueba'];
 
 export function nameValidator(control: AbstractControl): ValidationErrors | null {
   const value = String(control.value ?? '').trim();
-  if (!value) return null; // "required" se encarga del campo vacío
+  if (!value) return null;
   if (!NAME_REGEX.test(value)) return { format: true };
-  if (/(.)\1{2,}/iu.test(value)) return { repeated: true }; // 3 o más letras iguales seguidas
+  if (/(.)\1{2,}/iu.test(value)) return { repeated: true };
   if (RESERVED_NAMES.includes(value.toLowerCase())) return { reserved: true };
   return null;
 }

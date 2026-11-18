@@ -1,7 +1,3 @@
-/*
-  Centrado vertical: el contenedor interno de ion-content (parte "scroll") pasa a ser una columna flex
-  y .wrap usa margen automático arriba y abajo. Si el contenido no cabe, simplemente se desplaza.
-*/
 ion-content::part(scroll) {
   display: flex;
   flex-direction: column;
@@ -111,7 +107,7 @@ ion-input {
   }
   .flip {
     transform: scaleX(-1);
-  } /* el oído izquierdo se muestra reflejado */
+  }
   .check {
     position: absolute;
     top: 8px;
