@@ -36,7 +36,6 @@ export class WellnessPage implements OnInit {
   protected readonly results = signal<HealthTopic[]>([]);
   protected readonly expanded = signal<ReadonlySet<string>>(new Set());
 
-  /** Los esqueletos no se animan si el sistema pide reducir el movimiento. */
   protected readonly animateSkeleton = !window.matchMedia?.('(prefers-reduced-motion: reduce)')
     .matches;
 
@@ -54,7 +53,7 @@ export class WellnessPage implements OnInit {
     const clean = term.trim();
     if (!clean) return;
 
-    const id = ++this.requestId; // si el usuario cambia de tema rápido, se ignora la respuesta vieja
+    const id = ++this.requestId;
     this.selected.set(clean);
     this.state.set('loading');
     this.expanded.set(new Set());
@@ -68,7 +67,6 @@ export class WellnessPage implements OnInit {
     }
   }
 
-  /** ionChange se dispara al presionar Enter o al salir del campo de búsqueda. */
   protected onSearchbar(event: Event): void {
     const value = (event as CustomEvent<{ value?: string | null }>).detail.value ?? '';
     void this.search(value);

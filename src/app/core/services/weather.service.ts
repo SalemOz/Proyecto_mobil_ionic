@@ -7,7 +7,6 @@ import { AmbientMode, Weather } from '@core/models';
 import { environment } from '@env/environment';
 
 const API_URL = environment.api.weather;
-// Neiva, Huila: se usa si el usuario no da permiso de ubicación.
 const DEFAULT_PLACE = { lat: 2.9273, lon: -75.2819 };
 
 interface OpenMeteoResponse {
@@ -43,10 +42,6 @@ export function describeWeather(code: number): { text: string; icon: string } {
   return { text: 'Clima no identificado', icon: 'help-circle-outline' };
 }
 
-/**
- * Lluvia, tormenta o viento fuerte tapan los sonidos del entorno:
- * se sugiere el modo "Alto" para no perder lo que pasa del lado afectado.
- */
 export function suggestMode(weather: Weather): ModeSuggestion | null {
   const rainy =
     (weather.code >= 51 && weather.code <= 67) || (weather.code >= 80 && weather.code <= 82);
@@ -61,15 +56,12 @@ export function suggestMode(weather: Weather): ModeSuggestion | null {
   return null;
 }
 
-/** Consulta el clima actual en Open-Meteo (API pública, sin clave) usando el GPS del teléfono. */
 @Injectable({ providedIn: 'root' })
 export class WeatherService {
   private readonly http = inject(HttpClient);
 
   async load(): Promise<WeatherResult> {
     const place = await this.locate();
-    // Si el servidor no responde en 10 s, la petición falla y la página muestra su estado de error
-    // en vez de quedarse «Cargando clima…» para siempre.
     const response = await firstValueFrom(
       this.http
         .get<OpenMeteoResponse>(API_URL, {
@@ -93,7 +85,6 @@ export class WeatherService {
     };
   }
 
-  /** GPS con el plugin de Capacitor; si no hay permiso o falla, usa la ubicación por defecto. */
   private async locate(): Promise<{ lat: number; lon: number; fromGps: boolean }> {
     try {
       if (Capacitor.isNativePlatform()) {

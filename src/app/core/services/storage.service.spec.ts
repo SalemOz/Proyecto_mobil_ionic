@@ -25,8 +25,8 @@ describe('StorageService', () => {
     const base = { end: '', seconds: 5, ear: 'left' as const, mode: 'low' as const };
     for (let id = 1; id <= 105; id++) store.addSession({ ...base, id, start: `s${id}` });
     expect(store.sessions()).toHaveLength(100);
-    expect(store.sessions()[0].id).toBe(105); // la última agregada queda de primera
-    expect(store.sessions()[99].id).toBe(6); // se descartaron las 5 más antiguas
+    expect(store.sessions()[0].id).toBe(105);
+    expect(store.sessions()[99].id).toBe(6);
   });
 
   it('saveSettings conserva los valores por defecto que no se cambian', () => {

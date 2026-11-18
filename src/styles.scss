@@ -1,4 +1,3 @@
-/* Estilos globales. Los colores del tema están en theme/variables.scss. */
 @use 'theme/variables';
 
 body {
@@ -93,7 +92,6 @@ ion-segment-button {
   font-weight: 600;
   min-height: 44px;
 }
-/* Objetivos táctiles de al menos 44 px y capitalización normal */
 ion-button {
   min-height: 44px;
   text-transform: none;
@@ -127,7 +125,6 @@ ion-tab-button {
   border-radius: 7px;
 }
 
-/* Alertas: respetan los saltos de línea (\n) del mensaje y se ven más suaves */
 .oido-alert {
   --background: #ffffff;
   --max-width: 340px;

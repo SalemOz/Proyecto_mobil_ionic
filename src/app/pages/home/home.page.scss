@@ -7,7 +7,6 @@
   font-size: 0.95rem;
 }
 
-/* ---- Botón grande de amplificación ---- */
 .power {
   display: flex;
   flex-direction: column;
@@ -23,7 +22,6 @@
   place-items: center;
 }
 
-/* El halo crece con el nivel del sonido (--level va de 0 a 1) */
 .halo {
   position: absolute;
   inset: 6px;
@@ -39,7 +37,6 @@
   transform: scale(calc(1 + var(--level, 0) * 0.45));
 }
 
-/* Ondas que se expanden mientras escucha */
 .stage.on::before,
 .stage.on::after {
   content: '';
@@ -142,7 +139,6 @@
   }
 }
 
-/* ---- Tarjetas ---- */
 .card-head .value {
   margin-left: auto;
   color: var(--ion-color-primary-shade);
