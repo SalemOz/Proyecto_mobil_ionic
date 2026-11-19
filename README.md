@@ -14,6 +14,8 @@ El teléfono capta el sonido del ambiente con el micrófono y lo reproduce **sol
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Android](https://img.shields.io/badge/Android-APK-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 
+### [📥 Descargar APK](https://drive.google.com/file/d/1NmxgOuWlJDnjFdig9uwy7IWI5p2oBUio/view?usp=sharing)
+
 *Proyecto final de Programación de Dispositivos Móviles · Universidad Surcolombiana (USCO)*
 
 </div>
@@ -210,6 +212,8 @@ Android Studio → **Build › Generate App Bundles or APKs › Generate APKs** 
 
 El archivo queda en `android/app/build/outputs/apk/debug/app-debug.apk`.
 
+> 📥 **¿Solo quieres instalarla?** [Descarga el APK aquí](https://drive.google.com/file/d/1NmxgOuWlJDnjFdig9uwy7IWI5p2oBUio/view?usp=sharing) y ábrelo en tu teléfono Android (permite instalar apps de fuentes desconocidas si te lo pide).
+
 ---
 
 ## 🔐 Permisos de Android
@@ -268,11 +272,3 @@ Los permisos de micrófono y ubicación se piden la primera vez que se usan. La 
 | **Tercer corte** (Ionic + Angular) | `IonCard`, `IonList`, formularios reactivos validados, `HttpClient` a Open-Meteo |
 | **Avance** (Capacitor) | Sincronización con Android Studio + uso funcional de **GPS** (`@capacitor/geolocation`) |
 | **Evaluación final** | App funcionando, código fuente completo y APK instalado en un teléfono real |
-
----
-
-<div align="center">
-
-Hecho con 💙 en Neiva · Universidad Surcolombiana
-
-</div>
